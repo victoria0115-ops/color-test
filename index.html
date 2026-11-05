@@ -57,7 +57,7 @@ header.top{display:flex;justify-content:space-between;align-items:baseline;paddi
 .panes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .pane{position:relative;border-radius:8px;overflow:hidden;background:var(--drape-grey);aspect-ratio:3/4;cursor:pointer}
 .pane canvas{width:100%;height:100%;display:block}
-.pane .lbl{position:absolute;left:8px;bottom:8px;background:rgba(244,244,244,.92);padding:2px 9px;border-radius:3px;font-size:13px}
+.pane .lbl{display:none;position:absolute;left:8px;bottom:8px;background:rgba(244,244,244,.92);padding:2px 9px;border-radius:3px;font-size:13px}
 .pane .side{position:absolute;right:8px;top:8px;background:rgba(27,27,27,.8);color:#f4f4f4;padding:1px 8px;border-radius:3px;font-family:var(--mono);font-size:12px}
 .pane.sel{outline:3px solid var(--ink);outline-offset:3px}
 .pane .wait{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4f4f4;font-size:14px;text-align:center;padding:12px}
@@ -160,7 +160,7 @@ footer{border-top:1px solid var(--line);padding:18px 0 36px;font-size:13px;color
 
   <section class="intro" id="intro">
     <h1>把色布披在<br>屏幕里的你身上</h1>
-    <p class="lede">打开摄像头，网页会像专业色彩诊断那样，给你身上盖一块白色罩布，再在胸前放上一块色布。左右两种颜色同时对比，选出更衬你的那一边，10 组之后告诉你属于十二型里的哪一型。</p>
+    <p class="lede">打开摄像头，网页会像专业色彩诊断那样，在你脖子以下放上一整块色布。左右两种颜色同时对比，选出更衬你的那一边，10 组之后告诉你属于十二型里的哪一型。</p>
     <div class="strip" id="strip" aria-hidden="true"></div>
     <div class="strip-l mono"><span>春 · 暖亮</span><span>夏 · 冷柔</span><span>秋 · 暖浓</span><span>冬 · 冷鲜</span></div>
 
@@ -227,7 +227,6 @@ footer{border-top:1px solid var(--line);padding:18px 0 36px;font-size:13px;color
     </div>
 
     <div class="tools">
-      <button class="btn ghost" id="scarf" aria-pressed="false">白头巾遮住头发：关</button>
       <button class="btn ghost" id="toFree">自由试色</button>
       <button class="btn ghost" id="snap">保存对比图</button>
       <button class="btn ghost" id="restart">重新测试</button>
@@ -353,7 +352,7 @@ function cssOf(c){return METALS[c]?`rgb(${METALS[c][1].join(",")})`:c}
 /* ---------------- 状态 ---------------- */
 const S={round:0,picks:[],olive:null,mode:"test",active:"A",
   A:{name:"",c:"#fff"},B:{name:"",c:"#fff"},
-  face:null,cropX:null,scarf:false,stats:{n:0,faceL:0,hairL:0,h:0},result:null};
+  face:null,cropX:null,panelTop:null,stats:{n:0,faceL:0,hairL:0,h:0},result:null};
 
 /* ---------------- 模型 ---------------- */
 let segmenter=null,modelErr=null;
@@ -430,27 +429,6 @@ function composite(cat,px,pw,ph,vw,vh){
   /* 领口处略高、向两肩平滑下垂的弧线 */
   const dTop=x=>{const u=(x-cx)/(fw*1.6);return shoulderY+(F?F.h:pw*.3)*.42*Math.min(1,u*u)};
   const near=(x,y)=>F&&Math.abs(x-cx)<F.h*.75&&y>F.top-F.h*.6&&y<F.chin+F.h*.3;
-  /* 3. 白色罩布：盖住身上的衣服（模型识别的衣服 4 + 下巴以下的配饰 5），
-        保留原衣服的明暗褶皱。识别不到衣服时，在肩膀以下铺一块罩布。
-        打开“白头巾”时，头发(1)也换成白色。背景保持原样。 */
-  const chinY=F?F.chin:ph*.6;
-  let cN=0,cS=0,cS2=0,hN=0,hS=0,hS2=0;
-  for(let i=0;i<cat.length;i++){const c=cat[i];const k=i*4,L=.299*px[k]+.587*px[k+1]+.114*px[k+2];
-    if(c===4||(c===5&&i/pw>chinY)){cN++;cS+=L;cS2+=L*L}else if(c===1){hN++;hS+=L;hS2+=L*L}}
-  const useCloth=cN>pw*ph*.06;
-  const cM=cN?cS/cN:128,cSd=cN?Math.sqrt(Math.max(1,cS2/cN-cM*cM)):30;
-  const hM=hN?hS/hN:60,hSd=hN?Math.sqrt(Math.max(1,hS2/hN-hM*hM)):20;
-  const im=new ImageData(pw,ph),a=im.data;
-  for(let y=0;y<ph;y++){for(let x=0;x<pw;x++){
-    const i=y*pw+x,c=cat[i],k=i*4;
-    const cape=useCloth?(c===4||(c===5&&y>chinY)):(y>=dTop(x)&&c!==1&&c!==3);
-    const scarf=S.scarf&&c===1;
-    if(!cape&&!scarf)continue;
-    const L=.299*px[k]+.587*px[k+1]+.114*px[k+2];
-    const sh=scarf?1+Math.max(-1.6,Math.min(1.6,(L-hM)/hSd))*.07:useCloth?1+Math.max(-1.6,Math.min(1.6,(L-cM)/cSd))*.06:1;
-    a[k]=Math.min(255,CAPE[0]*sh);a[k+1]=Math.min(255,CAPE[1]*sh);a[k+2]=Math.min(255,CAPE[2]*sh);a[k+3]=255;
-  }}
-  ovA.getContext("2d").putImageData(im,0,0);
   /* 4. 裁成 3:4，跟随脸的位置 */
   const cropH=vh,cropW=Math.min(vw,vh*3/4);
   const targetX=(F?F.cx/pw*vw:vw/2)-cropW/2;
@@ -461,15 +439,15 @@ function composite(cat,px,pw,ph,vw,vh){
     const sc=cv.width/cropW;
     ctx.save();ctx.setTransform(-1,0,0,1,cv.width,0);ctx.imageSmoothingEnabled=true;
     ctx.drawImage(video,x0,0,cropW,cropH,0,0,cv.width,cv.height);
-    ctx.filter="blur(1.2px)";
-    ctx.drawImage(ovA,x0/kx,0,cropW/kx,ph,0,0,cv.width,cv.height);
-    ctx.filter="none";
     ctx.restore();
-    /* 5. 胸前的色布：像诊断师手里的布卡，直边、包边、带小标签 */
+    /* 5. 色块：从脖子下方开始，横向铺满整个画面。
+          离镜头太近或太远时限制在画面 40%～82% 高度之间，保证色块一定看得见。 */
     const fh=(F?F.h:ph*.25)*kx*sc;
-    const top=((F?F.chin:ph*.6)*kx)*sc+fh*.42;
-    const w=fh*3.5, xc=cv.width-(((F?F.cx:pw/2)*kx-x0)*sc);
-    drawPanel(ctx,xc-w/2,top,w,cv.height-top+20,pane);
+    const chinC=(F?F.chin:ph*.6)*kx*sc;
+    let top=chinC+fh*.2;
+    top=Math.max(cv.height*.4,Math.min(cv.height*.82,top));
+    S.panelTop=S.panelTop==null?top:S.panelTop*.8+top*.2;
+    drawPanel(ctx,-4,S.panelTop,cv.width+8,cv.height-S.panelTop+10,pane);
   });
   $("#waitA").style.display=$("#waitB").style.display="none";
   /* 5. 光线检查 + 采样（每 12 帧） */
@@ -478,7 +456,7 @@ function composite(cat,px,pw,ph,vw,vh){
 
 const CAPE=[242,241,238];
 function drawPanel(ctx,x,y,w,h,pane){
-  const r=Math.min(14,w*.04);
+  const r=0;
   ctx.save();
   ctx.shadowColor="rgba(0,0,0,.28)";ctx.shadowBlur=18;ctx.shadowOffsetY=6;
   ctx.beginPath();ctx.roundRect?ctx.roundRect(x,y,w,h,[r,r,0,0]):ctx.rect(x,y,w,h);
@@ -736,7 +714,6 @@ function markSel(){
 $("#chip-groups").addEventListener("click",e=>{const b=e.target.closest("button[data-c]");if(!b)return;setPane(S.active,b.dataset.n,b.dataset.c);markSel()});
 ["A","B"].forEach(k=>$("#pane"+k).addEventListener("click",()=>{if(S.mode!=="free")return;S.active=k;markSel()}));
 
-$("#scarf").onclick=()=>{S.scarf=!S.scarf;$("#scarf").setAttribute("aria-pressed",S.scarf);$("#scarf").textContent="白头巾遮住头发："+(S.scarf?"开":"关");redraw()};
 $("#toFree").onclick=()=>{
   S.mode="free";$("#choose").style.display="none";$("#question").style.display="none";$("#phase").style.display="none";$("#free").style.display="block";
   $("#round-k").textContent="FREE";$("#round-t").textContent="自由试色";buildChips();
