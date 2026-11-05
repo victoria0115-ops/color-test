@@ -6,145 +6,216 @@
 <title>个人色彩测试</title>
 <meta name="description" content="个人色彩测试，测测你适合什么颜色，找到最适合自己的风格～打开摄像头，把脸放进圆圈里，左右对比色布，测出你的四季十二型。">
 <style>
-/* 布局思路：整页无偏色中性灰（同专业诊断的灰色罩布），颜色只出现在色布和色卡上；舞台居中，左右两块 3:4 画面。 */
+/* 布局思路：时尚活泼的杂志感。浅紫粉底 + 三团柔和色雾，粗体渐变大标题，药丸按钮和贴纸标签；
+   测试区放在白色大卡片里，避免背景颜色干扰判色。 */
 :root{
-  --bg:#e6e6e6;
-  --panel:#f4f4f4;
-  --ink:#1b1b1b;
-  --muted:#5f5f5f;
-  --line:#c6c6c6;
+  --bg:#FBF8FF;
+  --panel:#FFFFFF;
+  --ink:#1F1633;
+  --muted:#6F6685;
+  --line:#ECE5F3;
+  --pink:#FF5C8A;
+  --violet:#7B61FF;
+  --sun:#FFC84A;
   --drape-grey:#9e9e9e;
-  --display:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC","SimSun",serif;
-  --body:"PingFang SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
+  --grad:linear-gradient(100deg,#FF5C8A 0%,#B45CFF 50%,#7B61FF 100%);
+  --display:"PingFang SC","HarmonyOS Sans SC","MiSans","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+  --body:"PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",system-ui,sans-serif;
   --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
   color-scheme:light;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased}
+body{color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.7;-webkit-font-smoothing:antialiased;
+  background:radial-gradient(circle at 8% 0%,#FFD6E4 0,rgba(255,214,228,0) 38%),radial-gradient(circle at 96% 8%,#DDD4FF 0,rgba(221,212,255,0) 36%),radial-gradient(circle at 70% 100%,#D3F5E8 0,rgba(211,245,232,0) 40%),var(--bg);
+  background-attachment:fixed}
 button{font:inherit;color:inherit;cursor:pointer}
-:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
-.wrap{max-width:980px;margin:0 auto;padding:0 16px}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.25}
-.mono{font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.2;font-weight:800}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.08em}
 .muted{color:var(--muted)}
-.btn{background:var(--ink);color:var(--panel);border:0;border-radius:6px;padding:12px 24px;font-size:16px;font-weight:500}
-.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
-.btn:disabled{opacity:.45;cursor:progress}
+.btn{background:var(--grad);color:#fff;border:0;border-radius:999px;padding:13px 28px;font-size:16px;font-weight:600;
+  box-shadow:0 10px 24px -8px rgba(123,97,255,.55);transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 28px -8px rgba(123,97,255,.6)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line);box-shadow:0 4px 12px -6px rgba(31,22,51,.15)}
+.btn.ghost:hover{border-color:var(--violet);color:var(--violet)}
+.btn:disabled{opacity:.5;cursor:progress;transform:none}
+
+/* header */
+header.top{display:flex;justify-content:space-between;align-items:center;padding:20px 0 0;gap:12px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;letter-spacing:.06em;font-size:15px}
+.logo i{display:inline-flex;gap:3px}
+.logo i b{width:10px;height:10px;border-radius:50%;display:block}
+.top-tag{font-size:13px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px}
 
 /* intro */
-header.top{display:flex;justify-content:space-between;align-items:baseline;padding:18px 0 0;gap:12px;flex-wrap:wrap}
-.intro{padding:36px 0 48px}
-.intro h1{font-size:clamp(40px,8vw,84px);font-weight:900;letter-spacing:-.01em}
-.intro .slogan{font-family:var(--display);font-size:clamp(20px,3vw,28px);margin:12px 0 0;text-wrap:balance}
-.intro .lede{max-width:32em;margin:14px 0 24px;color:var(--muted);font-size:17px}
-.strip{display:grid;grid-template-columns:repeat(12,1fr);height:56px;border-radius:4px;overflow:hidden;margin:26px 0 8px}
-.strip-l{display:grid;grid-template-columns:repeat(4,1fr);color:var(--muted)}
-.prep{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:30px 0}
-.prep div{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.intro{padding:30px 0 40px}
+.hero{display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center}
+.kicker{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--violet);font-weight:600}
+.intro h1{white-space:nowrap;font-size:clamp(40px,7.2vw,84px);letter-spacing:-.02em;margin-top:14px;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.intro .slogan{font-family:var(--display);font-weight:700;font-size:clamp(20px,3vw,28px);margin:10px 0 0;text-wrap:balance}
+.intro .lede{max-width:32em;margin:12px 0 22px;color:var(--muted);font-size:16.5px}
+.hero-art{position:relative;aspect-ratio:1;max-width:420px;width:100%;justify-self:center}
+.hero-art canvas{width:100%;height:100%;display:block;border-radius:32px;box-shadow:0 30px 60px -30px rgba(31,22,51,.45)}
+.hero-art .face-hint{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46%;aspect-ratio:1;border-radius:50%;border:2.5px dashed rgba(255,255,255,.95);display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;font-weight:700;font-size:15px;background:rgba(31,22,51,.18);backdrop-filter:blur(2px)}
+.hero-art .sticker{position:absolute;background:#fff;border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px;box-shadow:0 8px 20px -10px rgba(31,22,51,.4)}
+.hero-art .s1{left:-8px;top:12%;transform:rotate(-8deg);color:var(--pink)}
+.hero-art .s2{right:-6px;bottom:14%;transform:rotate(6deg);color:var(--violet)}
+.types{display:flex;flex-wrap:wrap;gap:8px;margin:34px 0 6px}
+.types span{border-radius:999px;padding:5px 14px;font-size:14px;font-weight:600;box-shadow:0 6px 14px -10px rgba(31,22,51,.5)}
+.types span:nth-child(odd){transform:rotate(-2deg)}
+.types span:nth-child(even){transform:rotate(2deg)}
+.prep{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}
+.prep div{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;position:relative;box-shadow:0 10px 24px -18px rgba(31,22,51,.35)}
+.prep em{font-style:normal;display:inline-flex;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;margin-bottom:8px}
 .prep b{display:block;font-size:15px;margin-bottom:2px}
 .prep span{font-size:14px;color:var(--muted)}
-.go{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.go{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.go .btn{font-size:17px;padding:15px 34px}
 #load-note{font-size:14px;color:var(--muted)}
-.err{background:#fff;border:1px solid #b33;color:#7a1d1d;border-radius:6px;padding:12px 14px;margin-top:16px;display:none}
+.err{background:#fff;border:1.5px solid #FF5C8A;color:#9a1745;border-radius:16px;padding:12px 16px;margin-top:16px;display:none}
 
 /* stage */
-#stage-sec{display:none;padding:18px 0 40px}
-.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:10px}
-.bar h2{font-size:22px}
-.steps{display:flex;gap:4px}
-.steps span{font-size:13px;padding:3px 12px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.steps span.on{border-color:var(--ink);color:var(--ink)}
-.steps span.cur{background:var(--ink);color:var(--panel);border-color:var(--ink)}
+#stage-sec{display:none;margin:16px 0 40px;background:#fff;border-radius:32px;padding:22px;box-shadow:0 30px 60px -36px rgba(31,22,51,.45)}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.bar h2{font-size:24px}
+#round-k{color:var(--violet);font-weight:600}
+.steps{display:flex;gap:6px}
+.steps span{font-size:13px;font-weight:600;padding:5px 14px;border-radius:999px;background:var(--bg);color:var(--muted)}
+.steps span.on{background:#EFE9FF;color:var(--violet)}
+.steps span.cur{background:var(--grad);color:#fff}
 .stage-note{font-size:14px;color:var(--muted);margin-top:4px}
-.panes{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.pane{position:relative;border-radius:8px;overflow:hidden;background:var(--drape-grey);aspect-ratio:3/4;cursor:pointer}
+.panes{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.pane{position:relative;border-radius:22px;overflow:hidden;background:var(--drape-grey);aspect-ratio:3/4;cursor:pointer}
 .pane canvas{width:100%;height:100%;display:block}
-.pane .lbl{display:none;position:absolute;left:8px;bottom:8px;background:rgba(244,244,244,.92);padding:2px 9px;border-radius:3px;font-size:13px}
-.pane .side{position:absolute;right:8px;top:8px;background:rgba(27,27,27,.8);color:#f4f4f4;padding:1px 8px;border-radius:3px;font-family:var(--mono);font-size:12px}
-.pane.sel{outline:3px solid var(--ink);outline-offset:3px}
-.pane .wait{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#f4f4f4;font-size:14px;text-align:center;padding:12px}
-.warn{display:none;margin:10px 0 0;padding:8px 12px;border-radius:6px;background:#fff6d6;border:1px solid #d9b84a;color:#5a4710;font-size:14px}
-.choose{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;margin-top:12px}
+.pane .lbl{display:none}
+.pane .side{position:absolute;right:12px;top:12px;background:#fff;color:var(--ink);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;box-shadow:0 6px 14px -6px rgba(0,0,0,.4)}
+.pane.sel{outline:4px solid var(--violet);outline-offset:3px}
+.pane .wait{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;text-align:center;padding:12px}
+.warn{display:none;margin:12px 0 0;padding:9px 14px;border-radius:14px;background:#FFF4D6;color:#6b4e00;font-size:14px}
+.choose{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;margin-top:14px}
 .choose .btn{width:100%}
-.question{display:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin-top:12px}
-.question h3{font-size:19px;margin-bottom:4px}
-.question .opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.question .opts button{background:transparent;border:1px solid var(--ink);border-radius:999px;padding:7px 16px}
-.free{display:none;margin-top:12px}
+.question{display:none;background:linear-gradient(135deg,#FFF0F5,#F1EDFF);border-radius:22px;padding:20px;margin-top:14px}
+.question h3{font-size:20px;margin-bottom:4px}
+.question .opts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.question .opts button{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 18px;font-weight:600}
+.question .opts button:hover{border-color:var(--violet);color:var(--violet)}
+.free{display:none;margin-top:14px}
 .free p{margin:0 0 8px;font-size:14px;color:var(--muted)}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chips button{width:34px;height:34px;border-radius:5px;border:1px solid rgba(0,0,0,.15);padding:0}
-.chips button[aria-pressed="true"]{outline:2px solid var(--ink);outline-offset:2px}
-.chip-group{margin-bottom:10px}
-.chip-group h4{margin:0 0 6px;font-size:13px;font-weight:500;color:var(--muted)}
-.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{width:36px;height:36px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px var(--line);padding:0;transition:transform .12s}
+.chips button:hover{transform:scale(1.12)}
+.chips button[aria-pressed="true"]{box-shadow:0 0 0 3px var(--violet)}
+.chip-group{margin-bottom:12px}
+.chip-group h4{margin:0 0 6px;font-size:13px;font-weight:600;color:var(--muted)}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 
 /* result */
-#result{display:none;margin:28px calc(50% - 50vw) 0;padding:26px max(16px,calc(50vw - 474px)) 40px;background:var(--bg);color:var(--ink);border-top:0}
-#result .season-band{display:grid;grid-template-columns:repeat(12,1fr);height:14px;border-radius:3px;overflow:hidden;margin-bottom:22px}
-.phase{display:none;margin-top:12px;border-radius:10px;padding:2px;animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
-.phase-in{border-radius:8px;padding:20px 22px;background:var(--ph-bg,#f4f4f4);color:var(--ph-ink,#1b1b1b)}
-.phase-in .mono{opacity:.75}
-.phase h3{font-size:24px;margin:4px 0 6px}
-.phase p{margin:0 0 10px;max-width:46em}
-.phase .picks{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-.phase .picks span{font-size:12.5px;border:1px solid currentColor;border-radius:999px;padding:1px 9px;opacity:.85}
-.ph-seasons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.ph-seasons div{flex:1;min-width:140px;border-radius:6px;padding:10px 12px;background:rgba(255,255,255,.5);color:#1b1b1b}
-.ph-seasons div.dim{opacity:.38}
-.ph-seasons b{font-family:var(--display);font-size:20px;display:block}
-.ph-seasons i{display:flex;height:10px;border-radius:2px;overflow:hidden;margin-top:6px}
-.ph-seasons i span{flex:1}
-.phase .btn{background:var(--ph-ink,#1b1b1b);color:var(--ph-bg,#f4f4f4)}
+#result{display:none;margin:28px -22px -22px;padding:28px 22px 34px;background:var(--bg);color:var(--ink);border-radius:0 0 32px 32px}
+#result .season-band{display:grid;grid-template-columns:repeat(12,1fr);height:16px;border-radius:999px;overflow:hidden;margin-bottom:22px}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 .reveal{animation:rise .55s cubic-bezier(.2,.7,.2,1) both}
 .r-head{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:end}
-.r-head h2{font-size:clamp(46px,7vw,76px);font-weight:900}
-.r-head h2 small{display:block;font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);letter-spacing:.1em;margin-top:4px}
+.r-head h2{font-size:clamp(52px,8vw,88px);font-weight:900;letter-spacing:-.02em}
+.r-head h2 small{display:block;font-family:var(--mono);font-size:13px;font-weight:400;color:var(--muted);letter-spacing:.12em;margin-top:4px}
 .pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.pill{border:1px solid var(--ink);border-radius:999px;padding:1px 10px;font-size:13px}
+.pill{border:1.5px solid var(--ink);border-radius:999px;padding:2px 12px;font-size:13px;font-weight:600}
 .pill.fill{background:var(--ink);color:var(--panel)}
-.axes{display:flex;flex-direction:column;gap:12px;margin:22px 0 6px;max-width:560px}
-.axis{display:grid;grid-template-columns:2.5em 1fr 2.5em;gap:10px;align-items:center;font-size:14px}
+.axes{display:flex;flex-direction:column;gap:14px;margin:22px 0 6px;max-width:560px}
+.axis{display:grid;grid-template-columns:2.5em 1fr 2.5em;gap:10px;align-items:center;font-size:14px;font-weight:600}
 .axis span:last-child{text-align:right}
-.axis .track{position:relative;height:8px;border-radius:4px}
-.axis .track b{position:absolute;top:-6px;width:4px;height:20px;background:var(--ink);border-radius:2px;transform:translateX(-50%);transition:left .7s cubic-bezier(.2,.7,.2,1)}
-.blk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:26px 0 10px}
-.blk h3{font-size:21px}
-.analysis{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 20px 16px;margin-top:22px}
-.concl{font-family:var(--display);font-size:20px;line-height:1.6;margin:0 0 10px;text-wrap:pretty}
-.reasons{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:12px}
-.reasons{list-style:none;padding-left:0!important}
-.reasons li{padding:14px 16px;border-radius:8px;background:var(--bg);border:1px solid var(--line);display:none}
+.axis .track{position:relative;height:10px;border-radius:999px}
+.axis .track b{position:absolute;top:-7px;width:24px;height:24px;background:#fff;border:3px solid var(--ink);border-radius:50%;transform:translateX(-50%);transition:left .7s cubic-bezier(.2,.7,.2,1)}
+.blk{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin:28px 0 12px}
+.blk h3{font-size:22px}
+.analysis{background:var(--panel);border-radius:24px;padding:8px 22px 18px;margin-top:22px;box-shadow:0 20px 40px -30px rgba(0,0,0,.35)}
+.concl{font-family:var(--display);font-weight:700;font-size:20px;line-height:1.6;margin:0 0 12px;text-wrap:pretty}
+.reasons{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+.reasons li{padding:16px 18px;border-radius:18px;background:var(--bg);display:none}
 .reasons li.shown{display:block;animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
 .reasons li .no{font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em}
 .seg-ctrl{display:flex;gap:10px;align-items:center;margin-top:14px;flex-wrap:wrap}
-.seg-ctrl .btn{background:var(--ink);color:var(--panel)}
-.seg-ctrl .btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink)}
 .typing::after{content:"▍";animation:blink 1s steps(1) infinite;margin-left:2px}
 @keyframes blink{50%{opacity:0}}
-.reasons b{display:block;font-size:15px}
-.reasons p{margin:2px 0 0;font-size:14.5px;color:var(--muted);max-width:60em}
-.reasons .picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.reasons .picks span{font-size:12.5px;border:1px solid var(--line);border-radius:999px;padding:1px 9px;background:var(--bg)}
-.reasons .picks span.hit{border-color:var(--ink);color:var(--ink)}
-.pal{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
-.sw{background:var(--panel);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.reasons b{display:block;font-size:16px}
+.reasons p{margin:3px 0 0;font-size:14.5px;color:var(--muted);max-width:60em}
+.reasons .picks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.reasons .picks span{font-size:12.5px;border-radius:999px;padding:2px 10px;background:var(--panel);color:var(--muted)}
+.reasons .picks span.hit{color:var(--ink);font-weight:600}
+.pal{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.sw{background:var(--panel);border-radius:16px;overflow:hidden;box-shadow:0 8px 18px -14px rgba(0,0,0,.4)}
 .sw i{display:block;aspect-ratio:4/3}
-.sw span{display:block;padding:4px 7px;font-family:var(--mono);font-size:11px;color:var(--muted)}
-.avoid{display:flex;gap:8px;flex-wrap:wrap}
-.avoid .sw{width:96px}
+.sw span{display:block;padding:5px 8px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.avoid{display:flex;gap:10px;flex-wrap:wrap}
+.avoid .sw{width:100px}
 .avoid .sw i{position:relative}
-.avoid .sw i::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1px),var(--bg) 50%,transparent calc(50% + 1px))}
+.avoid .sw i::after{content:"";position:absolute;inset:0;background:linear-gradient(to top right,transparent calc(50% - 1.5px),var(--panel) 50%,transparent calc(50% + 1.5px))}
 .tips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
-.tip{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:14px}
+.tip{background:var(--panel);border-radius:18px;padding:16px;box-shadow:0 8px 18px -14px rgba(0,0,0,.4)}
 .tip h4{margin:0 0 4px;font-size:15px}
 .tip p{margin:0;font-size:14px;color:var(--muted)}
+.poem{margin:22px 0 4px;padding:18px 22px;border-radius:22px;background:var(--panel);font-family:var(--display);font-size:clamp(17px,2.2vw,21px);font-weight:600;line-height:1.9;position:relative;box-shadow:0 14px 30px -24px rgba(0,0,0,.4)}
+.poem::before{content:"“";position:absolute;left:14px;top:-18px;font-size:64px;line-height:1;color:var(--muted);opacity:.5}
+.poem small{display:block;margin-top:6px;font-size:13px;font-weight:400;color:var(--muted);font-family:var(--body)}
 .note{font-size:13px;color:var(--muted);margin-top:16px;max-width:46em}
-footer{border-top:1px solid var(--line);padding:18px 0 36px;font-size:13px;color:var(--muted)}
+footer{padding:10px 0 40px;font-size:13px;color:var(--muted);text-align:center}
 
+/* 全站季节主题：首页切换季节时，背景、按钮、标签等一起换色；测完后自动换成你的季节 */
+:root{--acc:#1A1A1A;--acc-ink:#fff;--tint:#FAFAF8}
+body{background:var(--tint)!important;transition:background-color .6s}
+.btn{background:var(--acc)!important;color:var(--acc-ink)!important;transition:background-color .6s,transform .15s}
+.btn.ghost{background:#fff!important;color:var(--ink)!important}
+.btn.ghost:hover{border-color:var(--acc)!important;color:var(--acc)!important}
+.kicker{color:var(--acc)!important;border-color:color-mix(in srgb,var(--acc) 30%,#fff)!important}
+.hero-art .sticker{color:var(--acc)!important}
+.prep em{background:var(--acc)!important;color:var(--acc-ink)!important}
+.logo{color:var(--ink)}
+.season-tabs button[aria-pressed="true"]{background:var(--acc)!important;color:var(--acc-ink)!important}
+.steps span.cur{background:var(--acc)!important;border-color:var(--acc)!important;color:var(--acc-ink)!important}
+.steps span.on{border-color:var(--acc)!important;color:var(--acc)!important}
+.pane.sel{outline-color:var(--acc)!important}
+.chips button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--acc)!important}
+.question .opts button:hover{border-color:var(--acc);color:var(--acc)}
+.types span{transition:opacity .4s,border-color .4s,background-color .4s}
+.types.filtered span{opacity:.35}
+.types.filtered span.hl{opacity:1;border-color:var(--acc);background:color-mix(in srgb,var(--acc) 8%,#fff)}
+.hero-art{margin-bottom:56px}
+.season-tabs{position:absolute;left:50%;bottom:-58px;transform:translateX(-50%);display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;z-index:2}
+.season-tabs button{white-space:nowrap;border:0;background:none;border-radius:999px;padding:6px 16px;font-size:14px;font-weight:600;color:var(--muted);transition:background .2s,color .2s}
+.season-tabs button:hover{color:var(--ink)}
+.season-tabs button[aria-pressed="true"]{background:var(--ink);color:#fff}
+/* ---- 低饱和版：保留布局，颜色收敛为黑白灰 + 莫兰迪色盘 ---- */
+body{background:#FAFAF8}
+:root{--bg:#F4F3F0;--line:#E6E4E0;--muted:#7A7672;--ink:#1A1A1A;--violet:#1A1A1A}
+.btn{background:#1A1A1A;box-shadow:none}
+.btn:hover{transform:translateY(-1px);box-shadow:none;background:#000}
+.btn.ghost{box-shadow:none;border:1px solid #DAD8D4}
+.btn.ghost:hover{border-color:#1A1A1A;color:#1A1A1A}
+.intro h1{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--ink)}
+.kicker{color:var(--ink);font-weight:500}
+.top-tag{color:var(--muted)}
+.hero-art canvas{box-shadow:0 24px 50px -32px rgba(0,0,0,.35)}
+.hero-art .face-hint{background:#FAFAF8;color:var(--muted);font-weight:500;backdrop-filter:none;border:1.5px dashed #CFCBC5}
+.hero-art .sticker{color:var(--ink);font-weight:600;box-shadow:0 6px 16px -10px rgba(0,0,0,.3)}
+.types span{background:#fff;color:var(--ink);border:1px solid var(--line);box-shadow:none;font-weight:500;display:inline-flex;align-items:center;gap:6px;transform:none!important}
+.types span i{width:9px;height:9px;border-radius:50%;display:block}
+.prep div{box-shadow:none}
+.prep em{background:var(--acc)!important}
+#stage-sec{box-shadow:none;border:1px solid var(--line)}
+#round-k{color:var(--muted);font-weight:500}
+.steps span{background:#fff;border:1px solid var(--line)}
+.steps span.on{background:#fff;color:var(--ink);border-color:var(--ink)}
+.steps span.cur{background:var(--ink);color:#fff;border-color:var(--ink)}
+.question{background:var(--bg)}
+.chips button[aria-pressed="true"]{box-shadow:0 0 0 2px var(--ink)}
+.sw,.tip,.analysis,.poem{box-shadow:none}
 @media (max-width:760px){
+  .hero{grid-template-columns:1fr}
+  .hero-art{max-width:300px}
+  #stage-sec{padding:12px;border-radius:24px}
+  #result{margin:24px -12px -12px;padding:22px 12px 28px}
   .prep{grid-template-columns:1fr 1fr}
   .r-head{grid-template-columns:1fr}
   .pal{grid-template-columns:repeat(4,1fr)}
@@ -153,34 +224,49 @@ footer{border-top:1px solid var(--line);padding:18px 0 36px;font-size:13px;color
   .choose .btn{padding:12px 8px;font-size:15px}
 }
 @media (max-width:420px){.pal{grid-template-columns:repeat(3,1fr)}.tips{grid-template-columns:1fr}}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 
 <div class="wrap">
-  <header class="top mono muted"><span>PERSONAL COLOR · DIGITAL DRAPING</span><span>四季十二型</span></header>
+  <header class="top">
+    <div class="logo"><i><b style="background:#E3C9B8"></b><b style="background:#B5ABC4"></b><b style="background:#C4A493"></b><b style="background:#9EA7AF"></b></i>COLOR ME</div>
+    <span class="top-tag">四季十二型 · 免费测</span>
+  </header>
 
   <section class="intro" id="intro">
-    <h1>个人色彩测试</h1>
-    <p class="slogan">测测你适合什么颜色，找到最适合自己的风格～</p>
-    <p class="lede">打开摄像头，把脸放进屏幕中间的圆圈里，圆圈外面就是一整块色布。左右两种颜色同时对比，选出更衬你的那一边。先测冷暖皮，再定季节，最后细分到十二型。</p>
-    <div class="strip" id="strip" aria-hidden="true"></div>
-    <div class="strip-l mono"><span>春 · 暖亮</span><span>夏 · 冷柔</span><span>秋 · 暖浓</span><span>冬 · 冷鲜</span></div>
-
+    <div class="hero">
+      <div>
+        <span class="kicker">打开摄像头就能测</span>
+        <h1>个人色彩测试</h1>
+        <p class="slogan">测测你适合什么颜色，找到最适合自己的风格～</p>
+        <p class="lede">把脸放进屏幕中间的圆圈里，圆圈外面就是一整块色布。左右两种颜色同时对比，选出更衬你的那一边。先测冷暖皮，再定季节，最后细分到十二型。</p>
+        <div class="go">
+          <button class="btn" id="start" disabled>正在准备…</button>
+          <span id="load-note">正在加载（约 16MB），首次打开需要几秒。</span>
+        </div>
+        <div class="err" id="err"></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <canvas id="heroCv" width="840" height="840"></canvas>
+        <div class="face-hint">你的脸<br>放这里</div>
+        <span class="sticker s1">冷皮？暖皮？</span>
+        <span class="sticker s2">你是哪一季节型人？</span>
+        <div class="season-tabs" id="seasonTabs" role="group" aria-label="切换季节色卡">
+          <button type="button" data-s="" aria-pressed="true">全部</button><button type="button" data-s="春">春</button><button type="button" data-s="夏">夏</button><button type="button" data-s="秋">秋</button><button type="button" data-s="冬">冬</button>
+        </div>
+      </div>
+    </div>
+    <div class="types" id="strip" aria-label="十二种季型"></div>
     <div class="prep">
-      <div><b>素颜</b><span>粉底和口红会改变你的肤色，测试前卸掉。</span></div>
-      <div><b>窗边自然光</b><span>白天面向窗户最好，避免暖黄色的灯。</span></div>
-      <div><b>站在浅色墙前</b><span>背景会保留原样，太花或太深的背景会干扰判断。</span></div>
-      <div><b>屏幕亮度调到中等</b><span>屏幕的光会映到脸上，太亮会干扰判断。</span></div>
+      <div><em>1</em><b>素颜</b><span>粉底和口红会改变你的肤色，测试前卸掉。</span></div>
+      <div><em>2</em><b>窗边自然光</b><span>白天面向窗户最好，避免暖黄色的灯。</span></div>
+      <div><em>3</em><b>站在浅色墙前</b><span>背景会保留原样，太花或太深的背景会干扰判断。</span></div>
+      <div><em>4</em><b>屏幕亮度调到中等</b><span>屏幕的光会映到脸上，太亮会干扰判断。</span></div>
     </div>
 
-    <div class="go">
-      <button class="btn" id="start" disabled>正在准备…</button>
-      <span id="load-note">正在加载抠图模型（约 16MB），首次打开需要几秒。</span>
-    </div>
-    <div class="err" id="err"></div>
-    <p class="note">隐私说明：摄像头画面和抠图全部在你自己的设备上完成，不会上传到任何服务器，也不会保存。</p>
+    <p class="note">隐私说明：摄像头画面全部在你自己的设备上处理，不会上传到任何服务器，也不会保存。</p>
   </section>
 
   <section id="stage-sec">
@@ -236,6 +322,7 @@ footer{border-top:1px solid var(--line);padding:18px 0 36px;font-size:13px;color
         </div>
         <p id="r-desc" style="margin:0"></p>
       </div>
+      <blockquote class="poem" id="r-poem"></blockquote>
       <div class="axes" id="r-axes"></div>
       <div class="analysis">
         <div class="blk" style="margin-top:8px"><h3>诊断结论</h3><span class="mono muted" id="r-conf"></span></div>
@@ -329,6 +416,21 @@ const STAGE2={
     {A:{name:"薰衣草紫",c:"#B4A2D6",tag:"夏"},B:{name:"皇家紫",c:"#5B1A9E",tag:"冬"}},
     {A:{name:"雾霾灰蓝",c:"#A9B3C6",tag:"夏"},B:{name:"纯黑",c:"#111111",tag:"冬"}}]}
 };
+/* 每一型一段文艺的话，结果页和分享图都会用到 */
+const POEM={
+  LS:["你像三月清晨推开窗的第一缕光，","蜜桃、奶油黄与薄荷绿，是你说话的语气。","不必浓墨重彩，轻轻一抹，就是整个春天。"],
+  WS:["你是午后晒透的柑橘和一勺蜂蜜，","珊瑚、金黄、草绿在你身上热热闹闹地发光。","你走到哪里，哪里就是晴天。"],
+  BS:["你是糖果罐被打翻的那一刻，","西瓜红、松石绿、柠檬黄，越明亮越像你。","在人群里，一眼就能找到你。"],
+  LSu:["你像清晨湖面上的一层薄雾，","粉蓝、樱花粉和淡淡的薰衣草紫，轻轻落在你身上。","安静，却让人忍不住多看一眼。"],
+  CSu:["你是雨后的玫瑰园，","雾霾蓝和覆盆子色，是你的温柔，也是你的距离感。","清冷之中，藏着一点甜。"],
+  SSu:["你是一张调了灰的旧照片，","灰粉、灰蓝、灰紫，都在替你低声说话。","不张扬，却耐看了很多年。"],
+  SA:["你像晒过太阳的亚麻和一杯燕麦拿铁，","驼色、奶茶色、灰橄榄绿，温柔得刚刚好。","靠近你的人，都会不自觉地慢下来。"],
+  WA:["你是十月的南瓜田，和铺满落叶的小路，","砖红、芥末黄、橄榄绿在你身上成熟地燃烧。","浓烈，但从不慌张。"],
+  DA:["你是壁炉边的一杯红酒，和皮革封面的旧书，","酒红、墨绿、深咖，让你像一部老电影。","越深沉，越动人。"],
+  DW:["你是落雪的深夜，丝绒与宝石同时醒来，","黑、白、酒红、祖母绿，被你穿成了一种气场。","不必开口，就已经足够。"],
+  CW:["你像初雪过后的晴空，","纯白、宝蓝、玫红，干净又锋利。","冷，是你最好看的温度。"],
+  BW:["你是霓虹照在雪地上的那一秒，","正红、亮玫红、电光蓝，对比越强越像你。","你生来就是主角。"]
+};
 const PREFIX={LS:"浅",WS:"暖",BS:"亮",LSu:"浅",CSu:"冷",SSu:"柔",SA:"柔",WA:"暖",DA:"深",DW:"深",CW:"冷",BW:"亮"};
 const STAGE3={
   "春":{types:["LS","WS","BS"],sets:[["粉橘",["#F9C5AE","#F28C52","#FF5A5A"]],["绿色",["#C7E5B4","#8DB04A","#00B98E"]]]},
@@ -357,7 +459,37 @@ const $=s=>document.querySelector(s);
 const GREY=[158,158,158];
 
 /* hero strip */
-$("#strip").innerHTML=["LS","WS","BS","LSu","CSu","SSu","SA","WA","DA","DW","CW","BW"].map(k=>`<i style="background:${TYPES[k].pal[k==="DW"||k==="CW"?3:1]}"></i>`).join("");
+$("#strip").innerHTML=["LS","WS","BS","LSu","CSu","SSu","SA","WA","DA","DW","CW","BW"].map(k=>`<span data-season="${TYPES[k].season}"><i style="background:${TYPES[k].pal[k==="DW"||k==="CW"?3:k==="BW"?4:1]}"></i>${TYPES[k].name}</span>`).join("");
+/* 全站季节主题 */
+const SITE_THEME={"":{acc:"#1A1A1A",tint:"#FAFAF8"},"春":{acc:"#D9714E",tint:"#FDF3EC"},"夏":{acc:"#6F82AE",tint:"#F2F4FA"},"秋":{acc:"#9C4E2C",tint:"#F7EFE5"},"冬":{acc:"#1B2560",tint:"#F1F2F8"}};
+function applyTheme(sea){const t=SITE_THEME[sea||""],r=document.documentElement.style;r.setProperty("--acc",t.acc);r.setProperty("--tint",t.tint);
+  const st=$("#strip");st.classList.toggle("filtered",!!sea);st.querySelectorAll("span").forEach(x=>x.classList.toggle("hl",x.dataset.season===sea));
+  document.querySelectorAll("#seasonTabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.s===(sea||"")));
+  try{localStorage.setItem("pc-theme",sea||"")}catch(e){}}
+/* 首页右侧：慢慢旋转的整季色盘，中间留一个圆洞 */
+setTimeout(function(){const cv=$("#heroCv");if(!cv)return;const x=cv.getContext("2d"),W=cv.width;
+  const MUTED=["#E3C9B8","#D8B4A6","#C9A9A6","#BFA9B8","#B5ABC4","#A9B4C6","#A3BBC2","#A7BFB2","#B8C2A6","#CFC8A8","#DCC9A6","#D2B79F","#C4A493","#B49A90","#9EA7AF","#C2BBAF"];
+  const N=16,toRGB=h=>[1,3,5].map(k=>parseInt(h.slice(k,k+2),16));
+  let cur=MUTED.map(toRGB),target=cur.map(c=>c.slice());
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;let a=0,moving=false;
+  const DESC={"春":"暖 · 明亮","夏":"冷 · 柔和","秋":"暖 · 浓郁","冬":"冷 · 鲜明"};
+  function setSeason(sea){
+    target=(sea?BURSTS[sea]:MUTED).slice(0,N).map(toRGB);
+    applyTheme(sea);
+    $(".hero-art .face-hint").innerHTML=sea?`<span><b style="font-size:26px;color:#1A1A1A">${sea}</b><br>${DESC[sea]}</span>`:"你的脸<br>放这里";
+    if(!moving)draw();
+  }
+  function draw(){
+    let diff=0;
+    cur=cur.map((c,i)=>c.map((v,k)=>{const d=target[i][k]-v;diff+=Math.abs(d);return reduce?target[i][k]:v+d*.12}));
+    x.clearRect(0,0,W,W);
+    for(let i=0;i<N;i++){const a0=a+i*2*Math.PI/N;x.beginPath();x.moveTo(W/2,W/2);x.arc(W/2,W/2,W,a0,a0+2*Math.PI/N+.003);x.closePath();x.fillStyle=`rgb(${cur[i].map(Math.round).join(",")})`;x.fill()}
+    x.save();x.globalCompositeOperation="destination-out";x.beginPath();x.arc(W/2,W/2,W*.23,0,Math.PI*2);x.fill();x.restore();
+    if(!reduce){a+=.0016;moving=true;requestAnimationFrame(draw)}else{moving=false;if(diff>1)requestAnimationFrame(draw)}
+  }
+  $("#seasonTabs").addEventListener("click",e=>{const b=e.target.closest("button");if(b)setSeason(b.dataset.s)});
+  setSeason("");
+});
 
 /* ---------------- 色布颜色（含金属渐变） ---------------- */
 function hexRgb(h){h=h.replace("#","");return [parseInt(h.slice(0,2),16),parseInt(h.slice(2,4),16),parseInt(h.slice(4,6),16)]}
@@ -385,7 +517,7 @@ async function loadModel(){
     const res=await fetch("./models/selfie_multiclass_256x256.tflite");
     if(!res.ok)throw new Error("模型文件加载失败 "+res.status);
     const total=+res.headers.get("content-length")||16371837;const reader=res.body.getReader();const chunks=[];let got=0;
-    for(;;){const {done,value}=await reader.read();if(done)break;chunks.push(value);got+=value.length;$("#load-note").textContent=`正在加载抠图模型 ${Math.min(99,Math.round(got/total*100))}%`;}
+    for(;;){const {done,value}=await reader.read();if(done)break;chunks.push(value);got+=value.length;$("#load-note").textContent=`正在加载 ${Math.min(99,Math.round(got/total*100))}%`;}
     const buf=new Uint8Array(got);let o=0;for(const c of chunks){buf.set(c,o);o+=c.length}
     const fileset=await FilesetResolver.forVisionTasks("./vendor/wasm");
     const opts=d=>({baseOptions:{modelAssetBuffer:buf,delegate:d},runningMode:"VIDEO",outputCategoryMask:true,outputConfidenceMasks:false});
@@ -552,12 +684,6 @@ function measure(cat,pw,ph,F){
     if(cat[i]===3&&F){const y=Math.floor(i/pw);if(y>F.top+F.h*.35&&y<F.chin-F.h*.15){fr+=r;fg+=g;fb+=b;fn++}}
     else if(cat[i]===1){hl+=.299*r+.587*g+.114*b;hn++}}
   const w=$("#warn");let msg="";
-  const vw=video.videoWidth,vh=video.videoHeight,cropW=Math.min(vw,vh*3/4),kx=vw/pw;
-  const off=F?{dx:(F.cx*kx-vw/2)/cropW,dy:((F.top+F.chin)/2*kx/vh)-.42,size:F.h*kx/vh}:null;
-  if(!F||fn<40)msg="没有检测到脸。请把脸放进圆圈里。";
-  else if(Math.abs(off.dx)>.12||Math.abs(off.dy)>.1)msg="请把脸移到圆圈正中间。";
-  else if(off.size>.42)msg="离屏幕太近了，往后退一点，让整张脸都在圆圈里。";
-  else if(off.size<.16)msg="离屏幕太远了，往前靠一点，让脸填满圆圈。";
   if(!msg&&F&&fn>=40){
     const L=.299*fr/fn+.587*fg/fn+.114*fb/fn;
     if(L<75)msg="光线偏暗，对比会不准。请面向窗户或打开房间的灯。";
@@ -675,6 +801,7 @@ function renderResult(){
   $("#r-pills").innerHTML=`<span class="pill fill">${T.season}季型</span><span class="pill">${undertone}</span>`;
   $("#r-name").innerHTML=`${T.name}<small>${T.en}</small>`;
   $("#r-desc").textContent=T.desc;
+  $("#r-poem").innerHTML=POEM[best].join("<br>")+`<small>—— 写给${T.name}的你</small>`;
   const axes=[["冷","暖",v.t,"linear-gradient(90deg,#8FB3DE,#cfcfcf,#F7A541)"],["浅","深",v.d,"linear-gradient(90deg,#F5F5F7,#9a9a9a,#2a2a2a)"],["柔","鲜",v.c,"linear-gradient(90deg,#A49A9A,#c8c8c8,#FF1493)"]];
   $("#r-axes").innerHTML=axes.map(a=>`<div class="axis"><span>${a[0]}</span><div class="track" style="background:${a[3]}"><b style="left:50%"></b></div><span>${a[1]}</span></div>`).join("");
   requestAnimationFrame(()=>requestAnimationFrame(()=>document.querySelectorAll("#r-axes b").forEach((b,i)=>b.style.left=((axes[i][2]+1)/2*100)+"%")));
@@ -683,6 +810,7 @@ function renderResult(){
   $("#r-avoid").innerHTML=T.avoid.map(c=>`<div class="sw"><i style="background:${c}"></i><span>${c}</span></div>`).join("");
   $("#r-tips").innerHTML=Object.entries(T.tips).map(([k,t])=>`<div class="tip"><h4>${k}</h4><p>${t}</p></div>`).join("");
   $("#r-runner").textContent=`和你也很接近的是「${TYPES[second].name}」。拿不准时，用自由试色把两组色板都对比一下。`;
+  applyTheme(T.season);
   const th=THEME[T.season],res=$("#result");
   ["bg","ink","muted","line","panel"].forEach(x=>res.style.setProperty("--"+x,th[x]));
   $("#r-band").innerHTML=T.pal.map(c=>`<i style="background:${c}"></i>`).join("");
@@ -792,7 +920,7 @@ $("#snap").onclick=()=>{
   x.fillText("A · "+S.A.name,40,850);x.fillText("B · "+S.B.name,570,850);
   if(S.result){const T=TYPES[S.result.best];x.fillText(`${T.season}季型 · ${S.result.undertone}`,40,940);
     T.pal.forEach((col,i)=>{x.fillStyle=col;x.fillRect(40+(i%6)*170,990+Math.floor(i/6)*190,150,150)});
-    x.fillStyle="#5f5f5f";x.font="26px 'PingFang SC','Microsoft YaHei',sans-serif";x.fillText(T.desc.slice(0,34),40,1420);x.fillText(T.desc.slice(34),40,1462);}
+    x.fillStyle="#5f5f5f";x.font="26px 'PingFang SC','Microsoft YaHei',sans-serif";POEM[S.result.best].forEach((l,i)=>x.fillText(l,40,1410+i*42));}
   x.fillStyle="#5f5f5f";x.font="24px ui-monospace,Menlo,monospace";x.fillText("PERSONAL COLOR · DIGITAL DRAPING",40,H-50);
   const a=document.createElement("a");a.download="我的色彩对比.png";a.href=c.toDataURL("image/png");document.body.appendChild(a);a.click();a.remove();
 };
