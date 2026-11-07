@@ -277,6 +277,17 @@ body{background:#FAFAF8}
 .ana-item .alt{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;font-weight:600}
 .ana-item .alt u{width:16px;height:16px;border-radius:5px;display:inline-block;border:1px solid rgba(0,0,0,.1)}
 @media (max-width:600px){.ana{margin:6px -8px 24px;padding:16px 12px;border-radius:20px}.ana-grid{gap:6px}.ana-title{font-size:23px}}
+.img-modal{position:fixed;inset:0;background:rgba(20,18,16,.55);z-index:50;display:flex;align-items:center;justify-content:center;padding:16px}
+.img-modal[hidden]{display:none}
+.im-box{background:#fff;border-radius:24px;max-width:560px;width:100%;max-height:92vh;display:flex;flex-direction:column;padding:16px;gap:8px}
+.im-head{display:flex;justify-content:space-between;align-items:center}
+.im-head b{font-size:18px}
+.im-x{border:0;background:#f2f2f0;width:34px;height:34px;border-radius:50%;font-size:20px;line-height:1}
+.im-hint{margin:0;font-size:13px;color:var(--muted)}
+.im-scroll{overflow:auto;border-radius:14px;border:1px solid var(--line);flex:1;min-height:200px;-webkit-overflow-scrolling:touch}
+.im-scroll img{display:block;width:100%;height:auto;-webkit-touch-callout:default}
+.im-btns{display:flex;gap:8px}
+.im-btns .btn{flex:1}
 /* ---- 手机适配 ---- */
 @media (max-width:600px){
   .wrap{padding:0 12px}
@@ -341,7 +352,7 @@ body{background:#FAFAF8}
       </div>
       <div class="hero-art" aria-hidden="true">
         <canvas id="heroCv" width="840" height="840"></canvas>
-        <div class="face-hint">你的脸<br>放这里</div>
+        <div class="face-hint"></div>
         <span class="sticker s1">冷皮？暖皮？</span>
         <span class="sticker s2">你是哪一季节型人？</span>
         <div class="season-tabs" id="seasonTabs" role="group" aria-label="切换季节色卡">
@@ -398,7 +409,6 @@ body{background:#FAFAF8}
     </div>
 
     <div class="tools">
-      <button class="btn ghost" id="cover">覆盖方式：圆形洞口</button>
       <button class="btn ghost" id="toFree">自由试色</button>
       <button class="btn ghost" id="snap">保存对比图</button>
       <button class="btn ghost" id="restart">重新测试</button>
@@ -428,7 +438,7 @@ body{background:#FAFAF8}
       <div class="blk"><h3>搭配建议</h3></div>
       <div class="tips" id="r-tips"></div>
       <p class="note" id="r-runner"></p>
-      <div class="ana-cta"><button class="btn" id="go-ana" type="button">上传图片，看看适不适合我</button><span class="note" style="margin:0">你的结果已经保存在这台设备上，下次打开可以直接用。</span></div>
+      <div class="ana-cta"><button class="btn" id="save-diag" type="button">保存诊断图</button><button class="btn ghost" id="go-ana" type="button">上传图片，看看适不适合我</button><span class="note" style="margin:0">你的结果已经保存在这台设备上，下次打开可以直接用。</span></div>
       <p class="note" id="r-cam"></p>
     </div>
   </section>
@@ -452,6 +462,14 @@ body{background:#FAFAF8}
 
 <footer class="wrap">结果仅作穿搭和妆容参考。屏幕色差、摄像头自动调色和环境光都会影响判断，最可靠的仍是在自然光下用真实布料对比。</footer>
 
+<div class="img-modal" id="img-modal" hidden>
+  <div class="im-box">
+    <div class="im-head"><b id="im-title">诊断图已生成</b><button type="button" class="im-x" id="im-close" aria-label="关闭">×</button></div>
+    <p class="im-hint" id="im-hint">手机上长按图片即可保存到相册</p>
+    <div class="im-scroll"><img id="im-img" alt="诊断图"></div>
+    <div class="im-btns"><button class="btn" type="button" id="im-dl">下载图片</button></div>
+  </div>
+</div>
 <video id="video" playsinline muted style="display:none"></video>
 
 <script type="module">
@@ -595,7 +613,7 @@ const STATIC_EN={
  "衣服、口红、首饰、穿搭照都可以。网页会把图片按颜色分成几块，逐块告诉你适不适合、为什么。图片只在你的设备上处理。":"Clothes, lipstick, jewelry or an outfit photo. The page splits it into color areas and tells you, area by area, whether each suits you and why. The image stays on your device.",
  "点击选择图片":"Tap to choose a photo","或把图片拖到这里":"or drop an image here","原图":"Original",
  "颜色分区（点下面的颜色可以单独高亮）":"Color areas (tap a color below to highlight it)","← 返回":"← Back",
- "上传图片，看看适不适合我":"Upload a photo to check","你的结果已经保存在这台设备上，下次打开可以直接用。":"Your result is saved on this device for next time.",
+ "上传图片，看看适不适合我":"Upload a photo to check","保存诊断图":"Save diagnosis image","你的结果已经保存在这台设备上，下次打开可以直接用。":"Your result is saved on this device for next time.",
  "结果仅作穿搭和妆容参考。屏幕色差、摄像头自动调色和环境光都会影响判断，最可靠的仍是在自然光下用真实布料对比。":"For styling and makeup reference only. Screen color, camera auto-adjustment and lighting all affect the result; real fabric in daylight is still the most reliable test."
 };
 const SEASON_EN={"春":"Spring","夏":"Summer","秋":"Autumn","冬":"Winter"};
@@ -664,7 +682,7 @@ function applyLang(lang){
   if(window.heroRefresh)window.heroRefresh();
   if(typeof renderProfileCard==="function"){renderProfileCard();if(!$("#ana-sec").hidden){renderAnaProfile();if(anaData)renderAna()}}
   if(segmenter&&!$("#start").dataset.busy){$("#start").textContent=L("打开摄像头，开始测试","Open camera & start");$("#load-note").textContent=L("准备好了。浏览器会询问摄像头权限，请点“允许”。","Ready. Your browser will ask for camera access. Tap “Allow”.")}
-  $("#cover").textContent=coverLabel();
+  if($("#cover"))$("#cover").textContent=coverLabel();
   if(S.note)$("#stage-note").textContent=L(S.note[0],S.note[1]);
   if($("#stage-sec").style.display==="block"){
     if(S.mode==="test"&&S.plan&&S.round<S.plan.length&&$("#choose").style.display!=="none")roundText();
@@ -698,7 +716,7 @@ setTimeout(function(){const cv=$("#heroCv");if(!cv)return;const x=cv.getContext(
   let cur=MUTED.map(toRGB),target=cur.map(c=>c.slice());
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;let a=0,moving=false;
   const DESC={"春":"暖 · 明亮","夏":"冷 · 柔和","秋":"暖 · 浓郁","冬":"冷 · 鲜明"},DESC_EN={"春":"Warm · Clear","夏":"Cool · Soft","秋":"Warm · Rich","冬":"Cool · Vivid"};let curSea="";
-  function heroText(){$(".hero-art .face-hint").innerHTML=curSea?`<span><b style="font-size:26px;color:#1A1A1A">${SN(curSea)}</b><br>${L(DESC[curSea],DESC_EN[curSea])}</span>`:L("你的脸<br>放这里","Your face<br>goes here")}
+  function heroText(){$(".hero-art .face-hint").innerHTML=curSea?`<span><b style="font-size:26px;color:#1A1A1A">${SN(curSea)}</b><br>${L(DESC[curSea],DESC_EN[curSea])}</span>`:""}
   window.heroRefresh=heroText;
   function setSeason(sea){
     target=(sea?BURSTS[sea]:MUTED).slice(0,N).map(toRGB);
@@ -1150,7 +1168,7 @@ function renderAnalysis(quiet){
 let segTimer=null,typeTimer=null;
 function startSegments(quiet){
   clearTimeout(segTimer);clearInterval(typeTimer);
-  const el=$("#r-concl"),full=el.textContent;el.textContent="";el.classList.add("typing");
+  const el=$("#r-concl"),full=el.textContent;S.conclFull=full;el.textContent="";el.classList.add("typing");
   const lis=[...document.querySelectorAll("#r-reasons li")];let shown=0;
   const count=()=>{$("#seg-count").textContent=LL(`已显示 ${shown} / ${lis.length} 段`,`Showing ${shown} of ${lis.length}`);$("#seg-ctrl").style.display=shown<lis.length?"flex":"none"};
   const next=()=>{clearTimeout(segTimer);if(shown>=lis.length)return;lis[shown].classList.add("shown");shown++;count();
@@ -1181,7 +1199,7 @@ $("#chip-groups").addEventListener("click",e=>{const b=e.target.closest("button[
 ["A","B"].forEach(k=>$("#pane"+k).addEventListener("click",()=>{if(S.mode!=="free")return;S.active=k;markSel()}));
 
 function coverLabel(){return LL("覆盖方式：","Drape: ")+(S.cover==="full"?LL("圆形洞口","circle window"):LL("脖子以下色块","below the neck"))}
-$("#cover").onclick=()=>{S.cover=S.cover==="block"?"full":"block";$("#cover").textContent=coverLabel();redraw()};
+if($("#cover"))$("#cover").onclick=()=>{S.cover=S.cover==="block"?"full":"block";$("#cover").textContent=coverLabel();redraw()};
 $("#toFree").onclick=()=>{
   S.mode="free";$("#choose").style.display="none";$("#question").style.display="none";$("#free").style.display="block";
   $("#round-k").textContent="FREE";$("#round-t").textContent=LL("自由试色","Free try-on");buildChips();
@@ -1360,6 +1378,97 @@ function renderAna(){
   document.querySelectorAll(".ana-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;anaSel=anaSel===i?-1:i;renderAna()});
 }
 renderProfileCard();
+
+/* ================= 保存诊断图：把全部诊断内容画成一张长图 ================= */
+function wrapLines(ctx,text,maxW){
+  const toks=String(text).match(/[⺀-鿿　-〿＀-￯]|[^\s⺀-鿿　-〿＀-￯]+|\s+/g)||[];
+  const lines=[];let cur="";
+  for(const t of toks){if(/^\s+$/.test(t)&&!cur)continue;const test=cur+t;
+    if(ctx.measureText(test).width>maxW&&cur){lines.push(cur.trimEnd());cur=/^\s+$/.test(t)?"":t}else cur=test}
+  if(cur.trim())lines.push(cur.trimEnd());
+  /* 标点不放行首：挪到上一行末尾 */
+  for(let i=1;i<lines.length;i++){const m=lines[i].match(/^[，。、；：！？）」』”’,.;:!?)]+/);if(m){lines[i-1]+=m[0];lines[i]=lines[i].slice(m[0].length)}}
+  return lines.filter(l=>l.length);
+}
+function rrect(x,X,Y,W,H,r){x.beginPath();x.moveTo(X+r,Y);x.arcTo(X+W,Y,X+W,Y+H,r);x.arcTo(X+W,Y+H,X,Y+H,r);x.arcTo(X,Y+H,X,Y,r);x.arcTo(X,Y,X+W,Y,r);x.closePath()}
+function buildDiagImage(){
+  const R=S.result,T=TYPES[R.best],E=TEN[R.best],th=THEME[T.season],en=LANG==="en";
+  const FONT='"PingFang SC","HarmonyOS Sans SC","Hiragino Sans GB","Noto Sans SC","Microsoft YaHei",sans-serif';
+  const W=1080,P=64,CW=W-P*2;
+  const tmp=document.createElement("canvas").getContext("2d");
+  const reasons=[...document.querySelectorAll("#r-reasons li")].map(li=>({t:(li.querySelector("b")||{}).textContent||"",p:(li.querySelector("p")||{}).textContent||"",k:[...li.querySelectorAll(".picks span")].map(x=>x.textContent)}));
+  const tips=Object.entries(en?E.tips:T.tips),poem=en?E.poem:POEM[R.best];
+  /* 同一段绘制逻辑跑两遍：第一遍只量高度，第二遍真正画 */
+  function paint(x,draw){
+    let y=0,D=draw;const F=(sz,wt)=>`${wt||400} ${sz}px ${FONT}`;
+    const text=(str,sz,wt,col,lh,maxW,X)=>{x.font=F(sz,wt);const ls=wrapLines(x,str,maxW||CW);ls.forEach((l,i)=>{if(D){x.fillStyle=col;x.fillText(l,X==null?P:X,y+sz+i*lh)}});y+=ls.length*lh+(lh-sz);return ls.length};
+    if(draw){x.fillStyle=th.bg;x.fillRect(0,0,W,x.canvas.height)}
+    /* 色带 */
+    y=40;if(draw){T.pal.forEach((c,i)=>{x.fillStyle=c;x.fillRect(P+i*CW/12,y,CW/12+1,18)})}y+=46;
+    text((en?"COLOR ME · Personal color diagnosis · ":"COLOR ME · 个人色彩诊断 · ")+new Date().toISOString().slice(0,10),22,600,th.muted,30);
+    y+=10;text(en?E.name:T.name,en?96:120,900,th.ink,en?104:128);
+    text(en?T.name:T.en,24,600,th.muted,32);y+=6;
+    text(`${en?SEASON_EN[T.season]:T.season+"季型"}  ·  ${undertoneOf(R.t)}`,32,700,th.ink,44);
+    y+=6;text(en?E.desc:T.desc,28,400,th.ink,44);
+    /* 对比画面 */
+    y+=24;const pw=(CW-20)/2,ph=pw*4/3;
+    if(draw){[cvA,cvB].forEach((cv,i)=>{x.save();rrect(x,P+i*(pw+20),y,pw,ph,24);x.clip();x.drawImage(cv,P+i*(pw+20),y,pw,ph);x.restore()})}
+    y+=ph+16;text(`A · ${N(S.A.name)}        B · ${N(S.B.name)}`,24,600,th.muted,32);
+    /* 诗意文案 */
+    y+=20;const py=y;x.font=F(34,700);const pl=poem.flatMap(l=>wrapLines(x,l,CW-64));const ph2=pl.length*54+100;
+    if(draw){rrect(x,P,py,CW,ph2,28);x.fillStyle=th.panel;x.fill();x.fillStyle=th.ink;x.font=F(34,700);pl.forEach((l,i)=>x.fillText(l,P+32,py+64+i*54));
+      x.font=F(22,400);x.fillStyle=th.muted;x.fillText(en?`— for you, ${E.name}`:`—— 写给${T.name}的你`,P+32,py+ph2-28)}
+    y=py+ph2+36;
+    /* 三条刻度 */
+    const axes=[[en?"Cool":"冷",en?"Warm":"暖",R.v.t,["#8FB3DE","#cfcfcf","#F7A541"]],[en?"Light":"浅",en?"Deep":"深",R.v.d,["#F5F5F7","#9a9a9a","#2a2a2a"]],[en?"Soft":"柔",en?"Bright":"鲜",R.v.c,["#A49A9A","#c8c8c8","#FF1493"]]];
+    axes.forEach(a=>{if(draw){x.font=F(26,700);x.fillStyle=th.ink;x.fillText(a[0],P,y+30);x.textAlign="right";x.fillText(a[1],P+CW,y+30);x.textAlign="left";
+      const bx=P+90,bw=CW-180,g=x.createLinearGradient(bx,0,bx+bw,0);a[3].forEach((c,i)=>g.addColorStop(i/2,c));rrect(x,bx,y+14,bw,14,7);x.fillStyle=g;x.fill();
+      const mx=bx+(a[2]+1)/2*bw;x.beginPath();x.arc(mx,y+21,16,0,Math.PI*2);x.fillStyle="#fff";x.fill();x.lineWidth=4;x.strokeStyle=th.ink;x.stroke()}y+=58});
+    /* 诊断结论 + 5 段分析 */
+    y+=24;text(en?"Your diagnosis":"诊断结论",40,900,th.ink,52);
+    text(S.conclFull||$("#r-concl").textContent,30,700,th.ink,46);y+=12;
+    reasons.forEach(r=>{const top=y;y+=28;
+      const inner=()=>{text(r.t,29,800,th.ink,40,CW-56,P+28);text(r.p,25,400,th.muted,40,CW-56,P+28);if(r.k.length){y+=4;text(r.k.join(en?"  ·  ":"　·　"),21,500,th.ink,32,CW-56,P+28)}};
+      /* 先量高度（不画），再画底板，最后画文字 */
+      const was=D;D=false;inner();const h=y-top+24;D=was;y=top+28;
+      if(D){rrect(x,P,top,CW,h,24);x.fillStyle=th.panel;x.fill()}
+      inner();y=top+h+16});
+    /* 色板 */
+    y+=20;text(en?"Your palette":"你的推荐色板",40,900,th.ink,52);y+=6;
+    const sw=(CW-5*14)/6;T.pal.forEach((c,i)=>{const cx=P+(i%6)*(sw+14),cy=y+Math.floor(i/6)*(sw*.75+50);
+      if(draw){rrect(x,cx,cy,sw,sw*.75,16);x.fillStyle=c;x.fill();x.font=F(20,500);x.fillStyle=th.muted;x.fillText(c,cx+4,cy+sw*.75+30)}});
+    y+=2*(sw*.75+50)+16;
+    text(en?"Colors to avoid":"尽量避开",34,900,th.ink,46);y+=4;
+    T.avoid.forEach((c,i)=>{const cx=P+i*(sw+14);if(draw){rrect(x,cx,y,sw,sw*.6,16);x.fillStyle=c;x.fill();x.strokeStyle=th.bg;x.lineWidth=5;x.beginPath();x.moveTo(cx+8,y+sw*.6-8);x.lineTo(cx+sw-8,y+8);x.stroke();x.font=F(20,500);x.fillStyle=th.muted;x.fillText(c,cx+4,y+sw*.6+30)}});
+    y+=sw*.6+56;
+    /* 搭配建议 */
+    text(en?"Styling tips":"搭配建议",34,900,th.ink,46);y+=6;
+    const tw=(CW-16)/2;let rowY=y,maxH=0;
+    tips.forEach(([k,v],i)=>{const cx=P+(i%2)*(tw+16);if(i%2===0&&i){rowY+=maxH+16;maxH=0}
+      x.font=F(24,400);const ls=wrapLines(x,v,tw-40),hh=70+ls.length*36;maxH=Math.max(maxH,hh);
+      if(draw){rrect(x,cx,rowY,tw,hh,20);x.fillStyle=th.panel;x.fill();x.font=F(26,800);x.fillStyle=th.ink;x.fillText(k,cx+20,rowY+42);x.font=F(24,400);x.fillStyle=th.muted;ls.forEach((l,j)=>x.fillText(l,cx+20,rowY+82+j*36))}});
+    y=rowY+maxH+48;
+    /* 页脚 */
+    if(draw){x.fillStyle=th.ink;x.fillRect(P,y,CW,2)}y+=40;
+    text(en?"Find the colors that suit you · victoria0115-ops.github.io/color":"测测你适合什么颜色 · victoria0115-ops.github.io/color",24,600,th.muted,34);
+    y+=36;return y;
+  }
+  const H=Math.ceil(paint(tmp,false));
+  const c=document.createElement("canvas");c.width=W;c.height=H;const x=c.getContext("2d");paint(x,true);
+  return c;
+}
+let diagURL=null;
+$("#save-diag").onclick=()=>{
+  if(!S.result)return;
+  const c=buildDiagImage();diagURL=c.toDataURL("image/png");
+  $("#im-img").src=diagURL;$("#im-title").textContent=LL("诊断图已生成","Your diagnosis image is ready");
+  $("#im-hint").textContent=LL("手机上长按图片即可保存到相册；电脑上点下面的按钮下载。","On a phone, long-press the image to save it. On a computer, use the button below.");
+  $("#im-dl").textContent=LL("下载图片","Download image");
+  $("#img-modal").hidden=false;
+};
+$("#im-close").onclick=()=>{$("#img-modal").hidden=true};
+$("#img-modal").addEventListener("click",e=>{if(e.target.id==="img-modal")$("#img-modal").hidden=true});
+$("#im-dl").onclick=()=>{if(!diagURL)return;const a=document.createElement("a");a.download=LL(`我的色彩诊断-${TYPES[S.result.best].name}.png`,`my-color-diagnosis-${TEN[S.result.best].name.replace(/\s/g,"-")}.png`);a.href=diagURL;document.body.appendChild(a);a.click();a.remove()};
 collectStatic();applyLang(LANG);
 </script>
 </body>
