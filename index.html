@@ -234,6 +234,49 @@ body{background:#FAFAF8}
 .more-chips summary::-webkit-details-marker{display:none}
 .more-chips summary::before{content:"+ "}
 .more-chips[open] summary::before{content:"− "}
+/* ---- 色彩档案 + 图片分析 ---- */
+.profile-card{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px 18px;display:grid;gap:10px;max-width:520px}
+.profile-card .pc-k{font-size:13px;color:var(--muted);font-weight:600}
+.profile-card .pc-n{font-size:26px;font-weight:900;line-height:1.1}
+.profile-card .pc-n small{font-size:14px;font-weight:600;color:var(--muted);margin-left:8px}
+.profile-card .pc-strip{display:grid;grid-template-columns:repeat(12,1fr);height:14px;border-radius:999px;overflow:hidden}
+.profile-card .pc-btns{display:flex;gap:8px;flex-wrap:wrap}
+.profile-card .pc-btns .btn{padding:9px 16px;font-size:14px}
+.ana-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:18px}
+.ana{background:#fff;border:1px solid var(--line);border-radius:28px;padding:22px;margin:16px 0 40px}
+.ana-title{font-size:28px;margin-top:10px}
+.ana-sub{color:var(--muted);margin:6px 0 14px;max-width:46em}
+.ana-profile{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px;margin-bottom:14px}
+.ana-profile select{font:inherit;padding:7px 12px;border-radius:999px;border:1px solid var(--line);background:#fff}
+.ana-profile .muted{font-size:13px}
+.drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:2px dashed #D6D2CC;border-radius:22px;padding:30px 16px;text-align:center;cursor:pointer;background:var(--tint);transition:border-color .2s}
+.drop:hover,.drop.over{border-color:var(--acc)}
+.drop b{font-size:17px}.drop span{font-size:13px;color:var(--muted)}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.ana-verdict{margin:18px 0 14px;padding:16px 18px;border-radius:20px;background:var(--tint)}
+.ana-verdict .v-big{font-size:24px;font-weight:900}
+.ana-verdict p{margin:6px 0 0;color:var(--muted);font-size:14.5px}
+.ana-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ana-grid figure{margin:0}
+.ana-grid canvas{width:100%;height:auto;display:block;border-radius:16px;background:#f2f2f2}
+.ana-grid figcaption{font-size:12.5px;color:var(--muted);margin-top:6px;text-align:center}
+.ana-list{display:grid;gap:10px;margin-top:16px}
+.ana-item{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;padding:14px;border-radius:18px;border:1px solid var(--line);cursor:pointer;background:#fff;text-align:left;font:inherit;color:inherit}
+.ana-item.on{border-color:var(--acc);box-shadow:0 0 0 2px var(--acc) inset}
+.ana-item .sw2{width:54px;height:54px;border-radius:14px;position:relative;border:1px solid rgba(0,0,0,.08)}
+.ana-item .sw2 i{position:absolute;left:-6px;top:-6px;width:22px;height:22px;border-radius:50%;background:#1A1A1A;color:#fff;font-style:normal;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.ana-item .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.ana-item .row b{font-size:15px}
+.ana-item .pct{font-size:12.5px;color:var(--muted)}
+.ana-item .tag{font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px}
+.ana-item .tag.good{background:#E3F2E8;color:#1F6B3A}
+.ana-item .tag.ok{background:#FFF3D6;color:#7A5600}
+.ana-item .tag.bad{background:#FDE4E4;color:#9A1F1F}
+.ana-item .tag.bg{background:#EEE;color:#666}
+.ana-item p{margin:4px 0 0;font-size:14px;color:var(--muted);line-height:1.65}
+.ana-item .alt{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:13px;font-weight:600}
+.ana-item .alt u{width:16px;height:16px;border-radius:5px;display:inline-block;border:1px solid rgba(0,0,0,.1)}
+@media (max-width:600px){.ana{margin:6px -8px 24px;padding:16px 12px;border-radius:20px}.ana-grid{gap:6px}.ana-title{font-size:23px}}
 /* ---- 手机适配 ---- */
 @media (max-width:600px){
   .wrap{padding:0 12px}
@@ -294,6 +337,7 @@ body{background:#FAFAF8}
           <span id="load-note">正在加载（约 16MB），首次打开需要几秒。</span>
         </div>
         <div class="err" id="err"></div>
+        <div class="profile-card" id="profile-card" hidden></div>
       </div>
       <div class="hero-art" aria-hidden="true">
         <canvas id="heroCv" width="840" height="840"></canvas>
@@ -384,7 +428,24 @@ body{background:#FAFAF8}
       <div class="blk"><h3>搭配建议</h3></div>
       <div class="tips" id="r-tips"></div>
       <p class="note" id="r-runner"></p>
+      <div class="ana-cta"><button class="btn" id="go-ana" type="button">上传图片，看看适不适合我</button><span class="note" style="margin:0">你的结果已经保存在这台设备上，下次打开可以直接用。</span></div>
       <p class="note" id="r-cam"></p>
+    </div>
+  </section>
+
+  <section class="ana" id="ana-sec" hidden>
+    <div class="ana-top"><button class="btn ghost" id="ana-back" type="button">← 返回</button></div>
+    <h2 class="ana-title">上传图片，看看适不适合你</h2>
+    <p class="ana-sub">衣服、口红、首饰、穿搭照都可以。网页会把图片按颜色分成几块，逐块告诉你适不适合、为什么。图片只在你的设备上处理。</p>
+    <div class="ana-profile" id="ana-profile"></div>
+    <label class="drop" id="ana-drop" for="ana-file"><b>点击选择图片</b><span>或把图片拖到这里</span><input type="file" id="ana-file" accept="image/*"></label>
+    <div id="ana-out" hidden>
+      <div class="ana-verdict" id="ana-verdict"></div>
+      <div class="ana-grid">
+        <figure><canvas id="ana-orig"></canvas><figcaption>原图</figcaption></figure>
+        <figure><canvas id="ana-seg"></canvas><figcaption>颜色分区（点下面的颜色可以单独高亮）</figcaption></figure>
+      </div>
+      <div class="ana-list" id="ana-list"></div>
     </div>
   </section>
 </div>
@@ -530,6 +591,11 @@ const STATIC_EN={
  "诊断结论":"Your diagnosis","下一段":"Next","全部展开":"Show all","你的推荐色板":"Your palette",
  "贴近脸部的上衣、围巾、口红优先用":"Best near your face: tops, scarves, lipstick","尽量避开":"Colors to avoid",
  "离脸远一点穿，或者用推荐色隔开":"Keep them away from your face, or pair them with your palette","搭配建议":"Styling tips",
+ "上传图片，看看适不适合你":"Upload a photo: does it suit you?",
+ "衣服、口红、首饰、穿搭照都可以。网页会把图片按颜色分成几块，逐块告诉你适不适合、为什么。图片只在你的设备上处理。":"Clothes, lipstick, jewelry or an outfit photo. The page splits it into color areas and tells you, area by area, whether each suits you and why. The image stays on your device.",
+ "点击选择图片":"Tap to choose a photo","或把图片拖到这里":"or drop an image here","原图":"Original",
+ "颜色分区（点下面的颜色可以单独高亮）":"Color areas (tap a color below to highlight it)","← 返回":"← Back",
+ "上传图片，看看适不适合我":"Upload a photo to check","你的结果已经保存在这台设备上，下次打开可以直接用。":"Your result is saved on this device for next time.",
  "结果仅作穿搭和妆容参考。屏幕色差、摄像头自动调色和环境光都会影响判断，最可靠的仍是在自然光下用真实布料对比。":"For styling and makeup reference only. Screen color, camera auto-adjustment and lighting all affect the result; real fabric in daylight is still the most reliable test."
 };
 const SEASON_EN={"春":"Spring","夏":"Summer","秋":"Autumn","冬":"Winter"};
@@ -596,6 +662,7 @@ function applyLang(lang){
   document.querySelectorAll(".lang button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang));
   buildStrip();
   if(window.heroRefresh)window.heroRefresh();
+  if(typeof renderProfileCard==="function"){renderProfileCard();if(!$("#ana-sec").hidden){renderAnaProfile();if(anaData)renderAna()}}
   if(segmenter&&!$("#start").dataset.busy){$("#start").textContent=L("打开摄像头，开始测试","Open camera & start");$("#load-note").textContent=L("准备好了。浏览器会询问摄像头权限，请点“允许”。","Ready. Your browser will ask for camera access. Tap “Allow”.")}
   $("#cover").textContent=coverLabel();
   if(S.note)$("#stage-note").textContent=L(S.note[0],S.note[1]);
@@ -955,7 +1022,7 @@ function finish(){
   const v={t:clamp(t),d:clamp(.7*T.d+.3*camD),c:clamp(.7*T.c+.3*camC)};
   S.result={v,best,second,undertone:undertoneOf(t),t,sc,tieBreak:sc[ord[0]]===sc[ord[1]],camD,camC,cam:{n:st.n,faceL,hairL,hue}};
   S.mode="free";setStages();
-  renderResult();
+  renderResult();saveProfile();renderProfileCard();
   setPane("A",T.name+"色盘","burst:"+best);setPane("B",T.name+"避开色","burst:avoid-"+best);
   buildChips();$("#free").style.display="block";$("#choose").style.display="none";
   $("#round-k").textContent="RESULT";$("#round-t").textContent=LL("你的结果 · 继续自由试色","Your result · keep trying colors");S.note=null;$("#stage-note").textContent="";
@@ -1149,6 +1216,150 @@ $("#start").onclick=async()=>{
   setNote("把脸放进圆圈正中间，整张脸刚好填满圆圈。","Center your face in the circle so it just fills it.");
   showRound();loop();
 };
+
+/* ================= 个人色彩档案（保存在本机） ================= */
+const PROFILE_KEY="pc-profile";
+function loadProfile(){try{const p=JSON.parse(localStorage.getItem(PROFILE_KEY));return p&&TYPES[p.best]?p:null}catch(e){return null}}
+function saveProfile(){if(!S.result)return;try{localStorage.setItem(PROFILE_KEY,JSON.stringify({best:S.result.best,t:S.result.t,olive:S.olive,fam:S.fam,date:new Date().toISOString().slice(0,10)}))}catch(e){}}
+function profileUndertone(p){const keep={olive:S.olive,fam:S.fam};S.olive=p.olive;S.fam=p.fam;const u=undertoneOf(p.t);S.olive=keep.olive;S.fam=keep.fam;return u}
+function renderProfileCard(){
+  const p=loadProfile(),el=$("#profile-card");
+  if(!p){el.hidden=true;return}
+  const T=TYPES[p.best];el.hidden=false;
+  el.innerHTML=`<div class="pc-k">${LL("我的色彩档案","My color profile")} · ${p.date}</div>
+    <div class="pc-n">${TN(p.best)}<small>${SN(T.season)} · ${profileUndertone(p)}</small></div>
+    <div class="pc-strip">${T.pal.map(c=>`<i style="background:${c}"></i>`).join("")}</div>
+    <div class="pc-btns"><button class="btn" type="button" id="pc-ana">${LL("上传图片分析","Check a photo")}</button><button class="btn ghost" type="button" id="pc-clear">${LL("清除档案","Clear profile")}</button></div>`;
+  $("#pc-ana").onclick=()=>openAna("home");
+  $("#pc-clear").onclick=()=>{try{localStorage.removeItem(PROFILE_KEY)}catch(e){}renderProfileCard()};
+}
+
+/* ================= 图片颜色分析 ================= */
+let anaFrom="home",anaType=null,anaData=null,anaSel=-1;
+function openAna(from){
+  anaFrom=from;const p=loadProfile();anaType=(S.result&&S.result.best)||(p&&p.best)||anaType||"CSu";
+  if(from==="home"){$("#intro").style.display="none"}
+  $("#ana-sec").hidden=false;renderAnaProfile();if(anaData)renderAna();
+  $("#ana-sec").scrollIntoView({behavior:"smooth",block:"start"});
+}
+$("#ana-back").onclick=()=>{$("#ana-sec").hidden=true;if(anaFrom==="home"){$("#intro").style.display="";window.scrollTo({top:0})}else $("#result").scrollIntoView({behavior:"smooth"})};
+$("#go-ana").onclick=()=>openAna("result");
+function renderAnaProfile(){
+  const p=loadProfile(),src=S.result&&S.result.best===anaType?LL("来自你刚测的结果","from your test result"):p&&p.best===anaType?LL("来自你保存的档案","from your saved profile"):LL("还没测过？可以先选一个，或回首页去测试","Haven't tested yet? Pick one, or take the test first");
+  $("#ana-profile").innerHTML=`<span>${LL("按这个季型分析：","Analyze for:")}</span><select id="ana-type" aria-label="${LL("季型","Season type")}">${Object.keys(TYPES).map(k=>`<option value="${k}"${k===anaType?" selected":""}>${TN(k)}</option>`).join("")}</select><span class="muted">${src}</span>`;
+  $("#ana-type").onchange=e=>{anaType=e.target.value;renderAnaProfile();if(anaData)renderAna()};
+}
+const drop=$("#ana-drop");
+["dragenter","dragover"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add("over")}));
+["dragleave","drop"].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove("over")}));
+drop.addEventListener("drop",e=>{const f=e.dataTransfer.files&&e.dataTransfer.files[0];if(f)readImg(f)});
+$("#ana-file").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(f)readImg(f);e.target.value=""});
+function readImg(f){const url=URL.createObjectURL(f),img=new Image();img.onload=()=>{analyzeImage(img);URL.revokeObjectURL(url)};img.onerror=()=>alertAna(LL("这张图片打不开，换一张试试。","This image couldn't be opened. Try another one."));img.src=url}
+function alertAna(m){$("#ana-out").hidden=false;$("#ana-verdict").innerHTML=`<div class="v-big">${m}</div>`;$("#ana-list").innerHTML=""}
+const labOfHex=h=>{const c=hexRgb(h);return toLab(c[0],c[1],c[2])};
+const dE=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2]);
+function analyzeImage(img){
+  const M=420,k=Math.min(1,M/Math.max(img.width,img.height)),w=Math.max(1,Math.round(img.width*k)),h=Math.max(1,Math.round(img.height*k));
+  const oc=$("#ana-orig");oc.width=w;oc.height=h;const ox=oc.getContext("2d",{willReadFrequently:true});ox.drawImage(img,0,0,w,h);
+  const d=ox.getImageData(0,0,w,h).data,n=w*h,lab=new Float32Array(n*3),alpha=new Uint8Array(n);
+  for(let i=0;i<n;i++){const L=toLab(d[i*4],d[i*4+1],d[i*4+2]);lab[i*3]=L[0];lab[i*3+1]=L[1];lab[i*3+2]=L[2];alpha[i]=d[i*4+3]>40?1:0}
+  /* k-means（Lab 空间），先在抽样像素上迭代 */
+  const K=7,samp=[];for(let i=0;i<n;i+=3)if(alpha[i])samp.push(i);
+  if(samp.length<20)return alertAna(LL("图片里没有足够的颜色可分析。","Not enough color in this image to analyze."));
+  let cent=[];cent.push(samp[Math.floor(samp.length/2)]);cent=[[lab[cent[0]*3],lab[cent[0]*3+1],lab[cent[0]*3+2]]];
+  while(cent.length<K){let best=-1,bd=-1;for(let j=0;j<samp.length;j+=7){const i=samp[j],p=[lab[i*3],lab[i*3+1],lab[i*3+2]];let m=1e9;for(const c of cent)m=Math.min(m,dE(p,c));if(m>bd){bd=m;best=i}}cent.push([lab[best*3],lab[best*3+1],lab[best*3+2]])}
+  for(let it=0;it<10;it++){const sum=cent.map(()=>[0,0,0,0]);
+    for(const i of samp){const p=[lab[i*3],lab[i*3+1],lab[i*3+2]];let bi=0,bv=1e9;cent.forEach((c,ci)=>{const v=dE(p,c);if(v<bv){bv=v;bi=ci}});const s2=sum[bi];s2[0]+=p[0];s2[1]+=p[1];s2[2]+=p[2];s2[3]++}
+    cent=cent.map((c,ci)=>sum[ci][3]?[sum[ci][0]/sum[ci][3],sum[ci][1]/sum[ci][3],sum[ci][2]/sum[ci][3]]:c)}
+  /* 合并太接近的颜色 */
+  for(let a=0;a<cent.length;a++)for(let b=cent.length-1;b>a;b--)if(dE(cent[a],cent[b])<9)cent.splice(b,1);
+  const lbl=new Int16Array(n).fill(-1),cnt=cent.map(()=>0),sx=cent.map(()=>0),sy=cent.map(()=>0),border=cent.map(()=>0),rgbSum=cent.map(()=>[0,0,0]);let bTot=0,tot=0;
+  for(let i=0;i<n;i++){if(!alpha[i])continue;const p=[lab[i*3],lab[i*3+1],lab[i*3+2]];let bi=0,bv=1e9;cent.forEach((c,ci)=>{const v=dE(p,c);if(v<bv){bv=v;bi=ci}});lbl[i]=bi;cnt[bi]++;tot++;
+    const x=i%w,y=(i/w)|0;sx[bi]+=x;sy[bi]+=y;rgbSum[bi][0]+=d[i*4];rgbSum[bi][1]+=d[i*4+1];rgbSum[bi][2]+=d[i*4+2];
+    if(x<3||y<3||x>=w-3||y>=h-3){border[bi]++;bTot++}}
+  let cl=cent.map((c,ci)=>({lab:c,pct:cnt[ci]/tot,cx:sx[ci]/Math.max(1,cnt[ci]),cy:sy[ci]/Math.max(1,cnt[ci]),border:bTot?border[ci]/bTot:0,
+    rgb:rgbSum[ci].map(v=>Math.round(v/Math.max(1,cnt[ci]))),idx:ci})).filter(c=>c.pct>=.012).sort((a,b)=>b.pct-a.pct);
+  /* 被过滤掉的小色块归到最接近的颜色里；编号放在这块颜色自己的像素上 */
+  const keep=new Set(cl.map(c=>c.idx)),remap={};cent.forEach((c,ci)=>{if(!keep.has(ci)){let bi=cl[0].idx,bv=1e9;cl.forEach(k=>{const v=dE(c,k.lab);if(v<bv){bv=v;bi=k.idx}});remap[ci]=bi}});
+  for(let i=0;i<n;i++)if(lbl[i]>=0&&remap[lbl[i]]!==undefined)lbl[i]=remap[lbl[i]];
+  /* 编号位置：找这块颜色里“最实心”的地方（周围一圈都是同一种颜色），并且不和别的编号挤在一起 */
+  const Rw=Math.max(4,Math.round(Math.min(w,h)*.06)),placed=[];
+  cl.forEach(c=>{const I=new Int32Array((w+1)*(h+1));
+    for(let y=0;y<h;y++){let row=0;for(let x=0;x<w;x++){row+=lbl[y*w+x]===c.idx?1:0;I[(y+1)*(w+1)+x+1]=I[y*(w+1)+x+1]+row}}
+    const box=(x0,y0,x1,y1)=>I[y1*(w+1)+x1]-I[y0*(w+1)+x1]-I[y1*(w+1)+x0]+I[y0*(w+1)+x0];
+    let best=-1,bs=-1e18;
+    for(let y=Rw;y<h-Rw;y+=3)for(let x=Rw;x<w-Rw;x+=3){if(lbl[y*w+x]!==c.idx)continue;
+      if(placed.some(q=>(q[0]-x)**2+(q[1]-y)**2<(Rw*3)**2))continue;
+      const v=box(x-Rw,y-Rw,x+Rw+1,y+Rw+1)-Math.hypot(x-c.cx,y-c.cy)*.02;if(v>bs){bs=v;best=y*w+x}}
+    if(best>=0){c.cx=best%w;c.cy=(best/w)|0}placed.push([c.cx,c.cy])});
+  /* 背景：占了图片边缘的大部分，而且颜色发白、发灰或很单一 */
+  cl.forEach(c=>{const C=Math.hypot(c.lab[1],c.lab[2]);c.bg=c.border>.35&&(C<16||c.lab[0]>90)&&c.pct>.08});
+  if(cl.every(c=>c.bg))cl.forEach(c=>c.bg=false);
+  anaData={w,h,lbl,cl,d:new Uint8ClampedArray(d)};anaSel=-1;
+  $("#ana-out").hidden=false;renderAna();
+  $("#ana-verdict").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function hexOf(rgb){return "#"+rgb.map(v=>v.toString(16).padStart(2,"0")).join("").toUpperCase()}
+function drawSeg(){
+  const {w,h,lbl,cl,d}=anaData,sc=$("#ana-seg");sc.width=w;sc.height=h;const x=sc.getContext("2d"),im=x.createImageData(w,h),o=im.data;
+  const map={};cl.forEach((c,i)=>map[c.idx]=i);
+  for(let i=0;i<w*h;i++){const ci=map[lbl[i]];if(ci===undefined){o[i*4]=o[i*4+1]=o[i*4+2]=235;o[i*4+3]=255;continue}
+    const c=cl[ci],dim=anaSel>=0&&anaSel!==ci;let r=c.rgb[0],g=c.rgb[1],b=c.rgb[2];
+    if(anaSel>=0&&anaSel===ci){r=d[i*4];g=d[i*4+1];b=d[i*4+2]}
+    if(dim){r=r*.18+235*.82;g=g*.18+235*.82;b=b*.18+235*.82}
+    o[i*4]=r;o[i*4+1]=g;o[i*4+2]=b;o[i*4+3]=255}
+  x.putImageData(im,0,0);
+  /* 在每块颜色的中心标上编号 */
+  const R=Math.max(9,Math.round(Math.min(w,h)*.045));x.font=`bold ${Math.round(R*1.1)}px sans-serif`;x.textAlign="center";x.textBaseline="middle";
+  cl.forEach((c,i)=>{if(anaSel>=0&&anaSel!==i)return;x.beginPath();x.arc(c.cx,c.cy,R,0,Math.PI*2);x.fillStyle="#1A1A1A";x.fill();x.lineWidth=2;x.strokeStyle="#fff";x.stroke();x.fillStyle="#fff";x.fillText(String(i+1),c.cx,c.cy+1)});
+}
+function attrs(lab){const C=Math.hypot(lab[1],lab[2]);return {L:lab[0],C,neutral:C<10,t:C<10?0:clamp(lab[2]/40),d:clamp((58-lab[0])/32),c:clamp((C-32)/28)}}
+function judge(c,T){
+  const a=attrs(c.lab),pal=T.pal.map(labOfHex),av=T.avoid.map(labOfHex);
+  let np=0,npd=1e9;pal.forEach((p,i)=>{const v=dE(c.lab,p);if(v<npd){npd=v;np=i}});
+  let nad=1e9;av.forEach(p=>nad=Math.min(nad,dE(c.lab,p)));
+  let s=100-Math.min(55,npd*1.5);const reasons=[],reasonsEn=[];
+  const tw=a.t>.2?"暖":a.t<-.2?"冷":"中性",twE=a.t>.2?"warm":a.t<-.2?"cool":"neutral";
+  const dw=a.d>.25?"偏深":a.d<-.25?"偏浅":"中等深浅",dwE=a.d>.25?"deep":a.d<-.25?"light":"medium depth";
+  const cw=a.c>.2?"鲜艳":a.c<-.2?"柔和偏灰":"饱和度中等",cwE=a.c>.2?"vivid":a.c<-.2?"soft and muted":"medium saturation";
+  if(a.neutral){reasons.push(`这是无彩色（${a.L>85?"白":a.L<25?"黑":"灰"}），${dw}`);reasonsEn.push(`a neutral (${a.L>85?"white":a.L<25?"black":"grey"}), ${dwE}`)}
+  else{reasons.push(`这块颜色偏${tw==="中性"?"中性":tw}、${dw}、${cw}`);reasonsEn.push(`${twE}, ${dwE}, ${cwE}`)}
+  if(!a.neutral&&Math.abs(a.t)>.25&&Math.abs(T.t)>.3&&Math.sign(a.t)!==Math.sign(T.t)){s-=22;reasons.push(`你是${TYPES[anaType].name}，适合偏${T.t>0?"暖":"冷"}的颜色，冷暖不一致`);reasonsEn.push(`you're ${TEN[anaType].name} and suit ${T.t>0?"warm":"cool"} tones, so the temperature clashes`)}
+  else if(!a.neutral&&Math.abs(a.t)>.25&&Math.sign(a.t)===Math.sign(T.t)){reasons.push("冷暖和你一致");reasonsEn.push("the temperature matches you")}
+  const dd=Math.abs(a.d-T.d),cd=Math.abs(a.c-T.c);
+  if(dd>.9){s-=12;reasons.push(T.d<0?"对你来说太深太重":"对你来说太浅太淡");reasonsEn.push(T.d<0?"too dark and heavy for you":"too light and washed out for you")}
+  if(!a.neutral&&cd>.9){s-=12;reasons.push(T.c<0?"对你来说太鲜艳，会抢走脸的光彩":"对你来说太灰太闷，会显得没精神");reasonsEn.push(T.c<0?"too vivid for you, it would overpower your face":"too muted for you, it would make you look tired")}
+  if(nad<14){s-=25;reasons.push("和你的“尽量避开”色很接近");reasonsEn.push("very close to one of your colors to avoid")}
+  if(npd<14){reasons.push(`和你色板里的 ${T.pal[np]} 几乎一样`);reasonsEn.push(`almost identical to ${T.pal[np]} in your palette`)}
+  else if(npd<26){reasons.push(`接近你色板里的 ${T.pal[np]}`);reasonsEn.push(`close to ${T.pal[np]} in your palette`)}
+  s=Math.max(0,Math.min(100,Math.round(s)));
+  const v=s>=70?"good":s>=50?"ok":"bad";
+  return {s,v,reasons,reasonsEn,alt:T.pal[np],npd};
+}
+function renderAna(){
+  if(!anaData)return;const T=TYPES[anaType],cl=anaData.cl;
+  cl.forEach(c=>c.j=judge(c,T));
+  drawSeg();
+  const main=cl.filter(c=>!c.bg),wsum=main.reduce((s,c)=>s+c.pct,0)||1,score=Math.round(main.reduce((s,c)=>s+c.j.s*c.pct,0)/wsum);
+  const good=main.filter(c=>c.j.v==="good"),bad=main.filter(c=>c.j.v==="bad");
+  const idxOf=c=>cl.indexOf(c)+1;
+  const verdict=score>=70?LL("整体很适合你","Overall: suits you well"):score>=50?LL("整体还可以，注意搭配","Overall: okay, style it with care"):LL("整体不太适合你","Overall: not your best colors");
+  let sum=LL(`按${T.name}来看，这张图里的主要颜色综合得分 ${score} / 100。`,`For ${TEN[anaType].name}, the main colors here score ${score} / 100 overall.`);
+  if(good.length)sum+=LL(` 最衬你的是 ${good.map(idxOf).join("、")} 号色，可以放在离脸近的位置。`,` Colors ${good.map(idxOf).join(", ")} flatter you most; wear them close to your face.`);
+  if(bad.length)sum+=LL(` ${bad.map(idxOf).join("、")} 号色不太适合，建议离脸远一点，或换成推荐的替代色。`,` Colors ${bad.map(idxOf).join(", ")} don't suit you; keep them away from your face or swap for the suggested alternative.`);
+  if(cl.some(c=>c.bg))sum+=LL(" 灰色标注的是背景，不计入判断。"," Areas marked as background are left out.");
+  $("#ana-verdict").innerHTML=`<div class="v-big">${verdict}</div><p>${sum}</p>`;
+  const TAG={good:LL("适合","Suits you"),ok:LL("可以","Okay"),bad:LL("不太适合","Not ideal")};
+  $("#ana-list").innerHTML=cl.map((c,i)=>{const hex=hexOf(c.rgb),j=c.j,rs=LANG==="en"?j.reasonsEn:j.reasons;
+    const why=c.bg?LL("这块大面积在图片边缘，颜色单一，判断为背景。","Mostly along the edges with a flat color, so it's treated as background."):
+      (LANG==="en"?rs[0].charAt(0).toUpperCase()+rs[0].slice(1)+(rs.length>1?"; "+rs.slice(1).join("; "):"")+".":rs.join("，")+"。");
+    const alt=!c.bg&&j.v!=="good"&&j.alt?`<span class="alt">${LL("可以换成","Try instead")} <u style="background:${j.alt}"></u>${j.alt}</span>`:"";
+    return `<button type="button" class="ana-item${anaSel===i?" on":""}" data-i="${i}"><span class="sw2" style="background:${hex}"><i>${i+1}</i></span><span>
+      <span class="row"><b>${hex}</b><span class="pct">${LL("占","covers ")}${Math.round(c.pct*100)}%</span><span class="tag ${c.bg?"bg":j.v}">${c.bg?LL("背景","Background"):TAG[j.v]+" · "+j.s}</span></span>
+      <p>${why}</p>${alt}</span></button>`}).join("");
+  document.querySelectorAll(".ana-item").forEach(b=>b.onclick=()=>{const i=+b.dataset.i;anaSel=anaSel===i?-1:i;renderAna()});
+}
+renderProfileCard();
 collectStatic();applyLang(LANG);
 </script>
 </body>
