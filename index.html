@@ -230,6 +230,46 @@ body{background:#FAFAF8}
   .choose .btn{padding:12px 8px;font-size:15px}
 }
 @media (max-width:420px){.pal{grid-template-columns:repeat(3,1fr)}.tips{grid-template-columns:1fr}}
+.more-chips summary{cursor:pointer;font-size:14px;font-weight:600;color:var(--muted);padding:6px 0;list-style:none}
+.more-chips summary::-webkit-details-marker{display:none}
+.more-chips summary::before{content:"+ "}
+.more-chips[open] summary::before{content:"− "}
+/* ---- 手机适配 ---- */
+@media (max-width:600px){
+  .wrap{padding:0 12px}
+  header.top{padding-top:14px}
+  .top-tag{display:none}
+  .intro{padding:22px 0 32px}
+  .intro h1{font-size:44px}
+  .intro .slogan{font-size:19px}
+  .intro .lede{font-size:15px}
+  .go .btn{width:100%;padding:15px}
+  .hero-art{max-width:300px}
+  .season-tabs button{padding:6px 12px}
+  .types{gap:6px}.types span{font-size:13px;padding:4px 11px}
+  .prep{grid-template-columns:1fr 1fr;gap:8px}.prep div{padding:12px}
+  #stage-sec{margin:6px -8px 24px;padding:10px 8px 14px;border-radius:20px}
+  .bar{margin-bottom:10px;gap:8px}
+  .bar h2{font-size:19px}
+  .stage-note{font-size:13px}
+  .steps span{padding:4px 10px;font-size:12px}
+  .panes{gap:6px}
+  .pane{border-radius:14px}
+  .pane .side{width:24px;height:24px;font-size:12px;top:8px;right:8px}
+  .choose{gap:6px;margin-top:10px}
+  .choose .btn{padding:15px 6px;font-size:15px}
+  .tools{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .tools .btn{padding:11px 8px;font-size:14px}
+  .chips{gap:7px}.chips button{width:34px;height:34px}
+  #result{margin:20px -8px -14px;padding:20px 14px 28px;border-radius:0 0 20px 20px}
+  .r-head{gap:10px}
+  .r-head h2{font-size:52px}
+  .poem{padding:16px;font-size:16px}
+  .analysis{padding:6px 14px 14px}
+  .concl{font-size:17px}
+  .reasons li{padding:14px}
+  .pal{gap:8px}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -772,7 +812,8 @@ function paneFill(ctx,pane,x,y,w,h){
   if(METALS[pane.c]){const st=METALS[pane.c],g=ctx.createLinearGradient(x,y,x+w,y+h);
     [[0,st[2]],[.3,st[1]],[.55,st[2]],[.8,st[3]],[1,st[0]]].forEach(([o,cl])=>g.addColorStop(o,`rgb(${cl.join(",")})`));return g}
   return pane.c}
-function drawTag(ctx,tx,ty,w,pane){
+function tagK(){const cw=cvA.clientWidth||480;return cw<320?Math.min(2,240/cw*1.1):1}
+function drawTag(ctx,tx,ty,w,pane){const K=tagK();w=w*K;ty=ty-(K-1)*w*.06;
   const tw=Math.max(54,w*(LANG==="en"?.34:.17)),th=Math.max(54,w*.17)*.42;
   ctx.fillStyle="rgba(250,250,248,.95)";ctx.fillRect(tx,ty,tw,th);
   ctx.fillStyle="#3a3a3a";ctx.font=`${Math.round(th*.42)}px "PingFang SC","Microsoft YaHei",sans-serif`;ctx.textBaseline="middle";
@@ -791,7 +832,7 @@ function drawPanel(ctx,x,y,w,h,pane){
   /* 包边 */
   ctx.lineWidth=Math.max(3,w*.012);ctx.strokeStyle="rgba(0,0,0,.18)";ctx.stroke();
   /* 小标签 */
-  const th=Math.max(54,w*.17)*.42,tw=Math.max(54,w*(LANG==="en"?.34:.17)),tx=x+w*.06,ty=y+th*.5;
+  const K=tagK(),th=Math.max(54,w*.17)*.42*K,tw=Math.max(54,w*(LANG==="en"?.34:.17))*K,tx=x+w*.06,ty=y+th*.5;
   ctx.fillStyle="rgba(250,250,248,.95)";ctx.fillRect(tx,ty,tw,th);
   ctx.fillStyle="#3a3a3a";ctx.font=`${Math.round(th*.42)}px "PingFang SC","Microsoft YaHei",sans-serif`;ctx.textBaseline="middle";
   ctx.fillText(LANG==="en"?N(pane.name):pane.name.slice(0,6),tx+th*.25,ty+th/2,tw-th*.4);
@@ -1059,7 +1100,10 @@ function startSegments(quiet){
 
 function buildChips(){
   const groups=Object.assign({},S.result?{["你的推荐色 · "+TYPES[S.result.best].name]:[[TYPES[S.result.best].name+"色盘","burst:"+S.result.best],[TYPES[S.result.best].name+"避开色","burst:avoid-"+S.result.best]].concat(TYPES[S.result.best].pal.map(c=>[c,c]))}:{},FREE_GROUPS);
-  $("#chip-groups").innerHTML=Object.entries(groups).map(([g,list])=>`<div class="chip-group"><h4>${N(g)}</h4><div class="chips">${list.map(([n,c])=>`<button type="button" aria-label="${N(n)}" title="${N(n)}" data-c="${c}" data-n="${n}" style="background:${cssOf(c)}"></button>`).join("")}</div></div>`).join("");
+  const grp=([g,list])=>`<div class="chip-group"><h4>${N(g)}</h4><div class="chips">${list.map(([n,c])=>`<button type="button" aria-label="${N(n)}" title="${N(n)}" data-c="${c}" data-n="${n}" style="background:${cssOf(c)}"></button>`).join("")}</div></div>`;
+  const ent=Object.entries(groups),keep=S.result?2:1;
+  /* 默认只展开最常用的两组，其余收进“更多颜色”，手机上不用划很久 */
+  $("#chip-groups").innerHTML=ent.slice(0,keep).map(grp).join("")+`<details class="more-chips"><summary>${LL("更多颜色","More colors")}</summary>${ent.slice(keep).map(grp).join("")}</details>`;
   markSel();
 }
 function markSel(){
